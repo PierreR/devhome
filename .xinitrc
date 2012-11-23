@@ -16,10 +16,5 @@ fi
 vmware-user-suid-wrapper &
 xmodmap ~/.Xmodmap
 # xset b off
-exec scrotwm
-#exec awesome
-# exec xmonad
+exec xmonad
 # exec gnome-session
-# exec startkde
-# exec startxfce4
-# ...or the Window Manager of your choice
