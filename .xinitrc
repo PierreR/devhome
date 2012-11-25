@@ -14,6 +14,10 @@ fi
 # set the cursor
 xsetroot -cursor_name left_ptr
 
+# set keyboard layout
+setxkbmap -layout be
+
+# enable VBox addition (need sudo here at least in current version)
 sudo VBoxClient-all &
 
 # xmodmap ~/.Xmodmap
