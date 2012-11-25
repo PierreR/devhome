@@ -14,10 +14,9 @@ fi
 # set the cursor
 xsetroot -cursor_name left_ptr
 
-#gnome-settings-daemon &
-# vmware-user-wrapper &
-vmware-user-suid-wrapper &
-xmodmap ~/.Xmodmap
+sudo VBoxClient-all &
+
+# xmodmap ~/.Xmodmap
 # xset b off
 exec xmonad
 # exec gnome-session
