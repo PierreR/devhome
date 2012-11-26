@@ -1,1 +1,1 @@
-feh  --bg-scale '/home/xmod/.wallpaper.jpg' 
+feh  --bg-scale "$HOME/.wallpaper.jpg" 
