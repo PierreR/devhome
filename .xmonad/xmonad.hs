@@ -219,7 +219,7 @@ myStartupHook = setWMName "LG3D"
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do
-  myStatusBar <- spawnPipe "$HOME/.cabal/bin/xmobar"
+  myStatusBar <- spawnPipe "xmobar"
   xmonad myConfig {
         keys = \c -> azertyKeys c `M.union` keys myConfig c,
         logHook = myLogHook myStatusBar
@@ -228,7 +228,7 @@ main = do
 
 myConfig  = defaultConfig {
   -- simple stuff
-  terminal           = "urxvt",
+  terminal           = "gnome-terminal",
   focusFollowsMouse  = True,
   borderWidth        = 1,
   modMask            = mod4Mask,
