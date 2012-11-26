@@ -13,6 +13,7 @@
     ack-and-a-half
     auto-complete
     clojure-mode
+    evil
     ido-ubiquitous
     nrepl
     magit
@@ -20,6 +21,7 @@
     paredit
     puppet-mode
     smex
+    surround
     undo-tree
     volatile-highlights
     yaml-mode
