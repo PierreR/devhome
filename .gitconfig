@@ -1,0 +1,14 @@
+[color]
+	ui = true
+[alias]
+	st = status
+[user]
+	email = pradermecker@yahoo.ca
+	name = PierreR
+[merge]
+    	tool = p4merge
+[mergetool "p4merge"]
+    	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    	trustExitCode= false
+[push]
+	default = simple
