@@ -11,6 +11,9 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
+# set wallpaper
+sh ~/.fehbg &
+
 # set the cursor
 xsetroot -cursor_name left_ptr
 
@@ -18,7 +21,7 @@ xsetroot -cursor_name left_ptr
 setxkbmap -layout be
 
 # enable VBox addition (need sudo here at least in current version)
-sudo VBoxClient-all &
+VBoxClient-all &
 
 # xmodmap ~/.Xmodmap
 # xset b off
