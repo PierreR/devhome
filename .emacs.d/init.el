@@ -63,7 +63,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes (quote (zenburn)))
- '(custom-safe-themes (quote ("be7eadb2971d1057396c20e2eebaa08ec4bfd1efe9382c12917c6fe24352b7c1" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
+ '(custom-safe-themes (quote ("bf7ed640479049f1d74319ed004a9821072c1d9331bc1147e01d22748c18ebdf" "be7eadb2971d1057396c20e2eebaa08ec4bfd1efe9382c12917c6fe24352b7c1" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
  '(evil-overriding-maps (quote ((Buffer-menu-mode-map) (color-theme-mode-map) (comint-mode-map) (compilation-mode-map) (dictionary-mode-map) (ert-results-mode-map . motion) (Info-mode-map . motion) (speedbar-key-map) (speedbar-file-key-map) (speedbar-buffers-key-map) (nil) (magit-status-mode-map) (magit-key-mode-maps) (term-mode-map) (shell-mode-map))))
  '(inhibit-startup-screen t)
  '(menu-bar-mode nil)
@@ -182,8 +182,9 @@
             (make-local-hook 'before-save-hook)
             (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
-(require 'multi-term)
-(setq multi-term-program "/bin/zsh")
+;(require 'multi-term)
+;(setq multi-term-program "/bin/zsh")
+(setq term-program "/bin/zsh")
 (evil-set-initial-state 'term-mode 'emacs)
 (evil-set-initial-state 'shell-mode 'emacs)
 
