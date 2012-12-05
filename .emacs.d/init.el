@@ -15,6 +15,7 @@
     clojure-mode
     evil
     ido-ubiquitous
+    haskell-mode
     nrepl
     magit
     markdown-mode
@@ -143,9 +144,6 @@
 (require 'tramp)
 ;; keep in mind known issues with zsh - see emacs wiki
 (setq tramp-default-method "ssh")
-
-;; Haskell
-(load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
 
 (require 'volatile-highlights)
 
