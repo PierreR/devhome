@@ -14,8 +14,9 @@
     auto-complete
     clojure-mode
     evil
-    ido-ubiquitous
+    ghc
     haskell-mode
+    ido-ubiquitous
     nrepl
     magit
     markdown-mode
@@ -145,6 +146,7 @@
 ;; keep in mind known issues with zsh - see emacs wiki
 (setq tramp-default-method "ssh")
 
+
 (require 'volatile-highlights)
 
 (require 'surround)
@@ -172,7 +174,6 @@
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (setq ac-auto-start nil)
 (ac-set-trigger-key "TAB")
-
 (require 'flymake-puppet)
 (add-hook 'puppet-mode-hook
           (lambda ()
@@ -186,4 +187,9 @@
 (evil-set-initial-state 'term-mode 'emacs)
 (evil-set-initial-state 'shell-mode 'emacs)
 
-
+; Haskell
+(autoload 'ghc-init "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda ()
+                               (ghc-init)
+                               (setq ac-sources (append '(ac-source-ghc-mod) ac-sources))))
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
