@@ -73,13 +73,14 @@
  '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
- '(tooltip-mode nil))
+ '(tooltip-mode nil)
+ '(transient-mark-mode (quote (only . t))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "Ubuntu Mono" :foundry "unknown" :slant normal :weight normal :height 120 :width normal)))))
 
 (global-linum-mode 1)
 (set-default 'imenu-auto-rescan t)
@@ -181,12 +182,12 @@
             (make-local-hook 'before-save-hook)
             (add-hook 'before-save-hook 'delete-trailing-whitespace)))
 
-;(require 'multi-term)
-;(setq multi-term-program "/bin/zsh")
+(require 'multi-term)
+(setq multi-term-program "/bin/zsh")
 (setq term-program "/bin/zsh")
 (evil-set-initial-state 'term-mode 'emacs)
 (evil-set-initial-state 'shell-mode 'emacs)
-
+(setq exec-path (append exec-path '("~/bin")))
 ; Haskell
 (autoload 'ghc-init "ghc" nil t)
 (add-hook 'haskell-mode-hook (lambda ()
