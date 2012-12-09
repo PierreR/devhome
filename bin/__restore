@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "restarting dhcpcd"
+sudo systemctl restart dhcpcd
+systemctl status dhcpcd
+echo "restarting ntpd"
+sudo systemctl restart ntpd
+systemctl status ntpd
