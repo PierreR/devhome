@@ -28,7 +28,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium","gvim"])
+    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium","subl"])
 
     -- launch emacs
     , ((modm .|. shiftMask, xK_comma ), spawn "exec `emacsclient -c`")
@@ -73,7 +73,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_h     ), sendMessage Shrink)
 
     -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
+    , ((modm,               xK_m     ), sendMessage Expand)
 
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
