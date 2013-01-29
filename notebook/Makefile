@@ -20,7 +20,7 @@ pdf: $(PDF)
 	pdflatex $<
 
 %.tex: %.md $(TEMPLATE)
-	pandoc $< -s --template=$(TEMPLATE) --variable=author:'Pierre Radermecker' -o $@
+	pandoc $< -s --template=$(TEMPLATE) -o $@
 
 clean:
 	rm -f $(TEX) $(HTML) $(PDF) *.log *.aux *.blg *.bbl *.out
