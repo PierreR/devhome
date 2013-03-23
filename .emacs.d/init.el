@@ -20,6 +20,7 @@
     nrepl
     magit
     markdown-mode
+    multi-term
     paredit
     puppet-mode
     smex
