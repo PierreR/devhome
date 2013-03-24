@@ -6,6 +6,7 @@ set bs=indent,eol,start
 set complete=.,w,b,t "completion will first search in the current buffer, then windows, then open buffers, then tags
 set completeopt=menu,longest
 set cpoptions+=$ " Display a $ as vi does whenever you use the change command (c)
+set cursorline
 set directory=~/tmp
 set enc=utf-8
 set gdefault " assume the /g flag on :s substitutions to replace all matches in a line
@@ -70,6 +71,7 @@ ia funtion  function
 ia retunr   return
 ia reutrn   return
 
+hi CursorLine   cterm=NONE ctermbg=236 
 
 " Persistent-undo (vim 7.3)
 set undofile
