@@ -23,6 +23,7 @@ bindkey -e
 # Use gvim exclusively
 # alias vim='gvim --remote-silent'
 # alias vim='vim --servername VIM'
+alias xclip='xclip -selection c'
 alias salt='sudo salt'
 alias vi='gvim --remote-silent'
 alias view='vim -R'
