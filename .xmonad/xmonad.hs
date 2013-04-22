@@ -228,7 +228,7 @@ main = do
 
 myConfig  = defaultConfig {
   -- simple stuff
-  terminal           = "gnome-terminal",
+  terminal           = "lxterminal",
   focusFollowsMouse  = True,
   borderWidth        = 1,
   modMask            = mod4Mask,
