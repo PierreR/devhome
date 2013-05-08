@@ -12,5 +12,5 @@ import Control.Monad.IO.Class
 
 :set -fno-warn-unused-imports
 :def hlint const . return $ ":! hlint \"src\""
-:def! hoogle \s -> return $ ":! hoogle --count=15 \"" ++ s ++ "\""
+:def! hoogle \s -> return $ ":! hoogle --color --count=15 \"" ++ s ++ "\""
 :def! doc return . (":! hoogle --info " ++) 
