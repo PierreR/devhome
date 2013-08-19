@@ -1,14 +1,25 @@
-[color]
-	ui = true
+[user]
+	email = pradermecker@cirb.irisnet.be
+	name = Pierre Radermecker
 [alias]
 	st = status
-[user]
-	email = pradermecker@yahoo.ca
-	name = PierreR
-[merge]
-    	tool = p4merge
-[mergetool "p4merge"]
-    	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
-    	trustExitCode= false
+	dt = difftool
+	mt = mergetool
+[color]
+	ui = true
 [push]
 	default = simple
+[diff]
+    tool = p4merge
+[difftool "p4merge"]
+    cmd = p4merge "$LOCAL" "$REMOTE"
+[merge]
+    tool = p4merge
+[mergetool "p4merge"]
+    cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    trustExitCode = true
+    keepBackup = false
+[difftool]
+	prompt = false
+[mergetool]
+	prompt = false
