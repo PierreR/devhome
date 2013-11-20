@@ -14,10 +14,10 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+import XMonad.Layout.ZoomRow
 
 -- Some doc
 -- .|. is xmonad specific : it is a bitwise "or"
-
 
 
 -- Key bindings. Add, modify or remove key bindings here.
@@ -30,7 +30,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch dmenu
     , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium"])
 
-    -- launch emacs
+    -- launch editor
     , ((modm .|. shiftMask, xK_comma ), spawn "exec `~/bin/subl`")
 
     -- launch gmrun
@@ -146,7 +146,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = Mirror tiled ||| tiled ||| Full
+myLayout = Mirror tiled ||| Mirror zoomRow ||| zoomRow ||| Full ||| tiled
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
