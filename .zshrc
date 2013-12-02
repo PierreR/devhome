@@ -36,7 +36,7 @@ alias df="df -h"
 
 alias __reload_zsh='source ~/.zshrc'
 alias __reflector='sudo reflector --verbose -l 6 --sort rate --save /etc/pacman.d/mirrorlist'
-alias __mount_shared='sudo mount.vmhgfs .host:/ /mnt/hgfs'
+alias __mount_shared='sudo mount -t vboxsf shared /media/sf_shared'
 alias __mount_usb='sudo mount /dev/sdb /mnt/usb'
 # alias close_laptop='xrandr --output LVDS1 --off --output VGA1 --auto'
 # alias open_laptop='xrandr --output LVDS1 --auto --output VGA1 --auto --right-of LVDS1'
