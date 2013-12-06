@@ -71,7 +71,7 @@ ia funtion  function
 ia retunr   return
 ia reutrn   return
 
-hi CursorLine   cterm=NONE ctermbg=236 
+hi CursorLine   cterm=NONE ctermbg=254 
 
 " Persistent-undo (vim 7.3)
 set undofile
