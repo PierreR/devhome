@@ -45,5 +45,5 @@ alias __mount_usb='sudo mount /dev/sdb /mnt/usb'
 # alias __etags="cd_django;find . -type f -iname '*.py' | etags.emacs --lang=python -"
 # cdpath+=(~/projects/)
 function ssrc () {
-	git rev-list --all | GIT_PAGER=less xargs git grep $1
+    git rev-list --all | GIT_PAGER=less xargs git grep $1
 }
