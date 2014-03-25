@@ -113,5 +113,6 @@ ${PR_RED}${VIMODE} ${PR_BOLD_BLACK}>\
 
 }
 
+    RPROMPT=""
 setprompt
 
