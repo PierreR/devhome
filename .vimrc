@@ -1,3 +1,24 @@
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Plugin 'gmarik/vundle'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'Shougo/neocomplcache.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'dag/vim2hs'
+Plugin 'eagletmt/neco-ghc'	
+Plugin 'eagletmt/ghcmod-vim'
+Plugin 'ervandew/supertab'
+" Dependency of ghcmod-vim
+Plugin 'Shougo/vimproc'
+
+filetype plugin indent on
+
+
 " Common usual options that should never be changed.
 " Without these you don't survive Vim
 syn on
@@ -17,7 +38,6 @@ set incsearch
 set lazyredraw
 set mouse=a " enable the mouse in all mode
 set nobackup
-set nocompatible
 set noexpandtab "don't transform tab into spaces by default
 set noshowmode
 set nostartofline
@@ -80,3 +100,7 @@ set undodir=/tmp
 let g:SuperTabDefaultCompletionType = "context"
 
 set wildchar=<Tab> wildmenu wildmode=full
+
+if has('unnamedplus')
+  set clipboard=unnamed,unnamedplus
+endif
