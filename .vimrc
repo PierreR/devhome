@@ -5,16 +5,27 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Plugin 'gmarik/vundle'
+Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
-Plugin 'Shougo/neocomplcache.vim'
+Plugin 'bling/vim-airline'
 Plugin 'scrooloose/syntastic'
 Plugin 'dag/vim2hs'
-Plugin 'eagletmt/neco-ghc'	
+Plugin 'eagletmt/neco-ghc'
+Plugin 'godlygeek/tabular'
+Plugin 'Shougo/neocomplcache.vim'
 Plugin 'eagletmt/ghcmod-vim'
-Plugin 'ervandew/supertab'
 " Dependency of ghcmod-vim
 Plugin 'Shougo/vimproc'
+Plugin 'rodjek/vim-puppet'
+Plugin 'matze/vim-move'
+Plugin 'scrooloose/nerdtree'
+Plugin 'vim-scripts/tComment'
+"Plugin 'Valloric/YouCompleteMe'
+"Plugin 'ervandew/supertab'
+"Break <Tab>
+"Plugin 'SirVer/ultisnips'
+
 
 filetype plugin indent on
 
@@ -80,7 +91,9 @@ inoremap <C-s> <Esc>:w<CR>i
 nnoremap <F5> :buffers<CR>:buffer<Space>
 noremap <Space> :set hlsearch! hlsearch?<CR>
 noremap <leader>n :cn<CR>
-nnoremap <leader>l :execute ToggleColorScheme()<CR> 
+nnoremap <leader>l :execute ToggleColorScheme()<CR>
+map <leader>t :NERDTreeToggle<CR>
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 "   Correct some spelling mistakes
 ia htis     this
@@ -97,10 +110,23 @@ hi CursorLine   cterm=NONE ctermbg=254
 set undofile
 set undodir=/tmp
 
-let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabDefaultCompletionType = "context"
 
 set wildchar=<Tab> wildmenu wildmode=full
+
+"Plugin config
+let g:ghcmod_hlint_options = ['--ignore=Avoid lambda']
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:haskell_conceal              = 0
+let g:acp_enableAtStartup = 0
+let g:neocomplcache_enable_at_startup = 1
+let g:loaded_syntastic_puppet_puppet_checker = 0
+let g:ctrlp_working_path_mode = 'a'
 
 if has('unnamedplus')
   set clipboard=unnamed,unnamedplus
 endif
+
+"Remove all training space on puppet file
+autocmd BufWritePre *.pp :%s/\s\+$//e
