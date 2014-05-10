@@ -88,6 +88,7 @@ nnoremap <leader><leader> :LustyBufferExplorer<CR>
 nnoremap Y y$
 noremap <C-s> :w<CR> 
 inoremap <C-s> <Esc>:w<CR>i
+nnoremap <F4> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 nnoremap <F5> :buffers<CR>:buffer<Space>
 noremap <Space> :set hlsearch! hlsearch?<CR>
 noremap <leader>n :cn<CR>
