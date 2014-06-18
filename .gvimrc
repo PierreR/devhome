@@ -6,9 +6,13 @@ set guioptions-=l
 set guioptions-=L
 set guioptions-=r
 set guioptions-=b
+
+set background=light
+colorscheme solarized
+
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver25-iCursor/lCursor
-highlight iCursor guibg=green
+highlight iCursor guibg=ForestGreen
 set guicursor+=a:blinkon0
 
 let g:move_map_keys = 0
