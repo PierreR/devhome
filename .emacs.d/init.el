@@ -13,6 +13,7 @@
     ack-and-a-half
     auto-complete
     evil
+    flymake-puppet
     ghc
     haskell-mode
     ido-ubiquitous
@@ -20,6 +21,7 @@
     multi-term
     puppet-mode
     paredit
+    projectile
     smex
     surround
     undo-tree
