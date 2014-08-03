@@ -180,6 +180,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
       ;; ido-ignore-buffers '("\\` " "^\\*")
       ido-max-prospects 8)
 
+(require 'flx-ido)
 (ido-mode 1)
 (ido-ubiquitous 1)
 (setq ispell-program-name "aspell" ; use aspell instead of ispell
@@ -248,11 +249,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ; Haskell
 (setq haskell-program-name "cabal repl")
-(autoload 'ghc-init "ghc" nil t)
 
-(add-hook 'haskell-mode-hook
-      (lambda ()
-        (ghc-init)))
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
 (defun my-ac-haskell-mode ()
   (setq ac-sources '(ac-source-words-in-same-mode-buffers
@@ -261,6 +261,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-hook 'haskell-mode-hook 'my-ac-haskell-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
+
+(setq ghc-ghc-options '("-fno-warn-missing-signatures"))
+(setq ghc-check-warning-fringe 0)
 
 (eval-after-load "haskell-cabal"
   '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
