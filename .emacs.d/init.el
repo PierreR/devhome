@@ -216,6 +216,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-x C-d") 'dired)
 (global-set-key (kbd "C-,") 'smex)
+(global-set-key (kbd "<f5>") 'projectile-ibuffer)
 (global-set-key (kbd "<C-mouse-1>") 'find-tag)
 (global-set-key (kbd "<C-down-mouse-1>") nil)
 (global-set-key (kbd "C-s") 'save-buffer)
