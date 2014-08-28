@@ -66,7 +66,7 @@
       "E" 'magit-interactive-rebase
       "e" 'magit-ediff
       "w" 'magit-wazzup
-      "q" 'magit-quit-window
+      "q" 'magit-mode-quit-window
       "m" 'magit-key-mode-popup-merging
       "x" 'magit-reset-head
       "v" 'magit-revert-item

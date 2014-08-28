@@ -105,7 +105,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "<C-down-mouse-1>") nil)
 (global-set-key (kbd "<f5>") 'projectile-ibuffer)
 (global-set-key (kbd "<f6>") 'magit-status)
-;(global-set-key (kbd "C-x C-b") 'helm-mini)
 
 (evil-leader/set-key
   "," 'evil-buffer
@@ -152,6 +151,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  '(haskell-stylish-on-save nil)
  '(haskell-tags-on-save t)
  '(inhibit-startup-screen t)
+ '(ediff-split-window-function (quote split-window-horizontally))
  '(menu-bar-mode nil)
  '(puppet-lint-command "puppet-lint --no-80chars-check --no-documentation-check --no-inherits_across_namespaces-check --no-selector_inside_resource-check --no-quoted_booleans-check --no-class_parameter_defaults-check --with-context --log-format \"%{path}:%{linenumber}: %{kind}: %{message} (%{check})\"")
  '(scroll-bar-mode nil)
