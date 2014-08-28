@@ -15,12 +15,10 @@
   '(ac-nrepl
     ack-and-a-half
     auto-complete
-    clojure-mode
     evil
     ghc
     haskell-mode
     ido-ubiquitous
-    nrepl
     magit
     markdown-mode
     multi-term
@@ -49,11 +47,15 @@
       (unless (package-installed-p p)
         (package-install p)))))
 
-(my-install-packages)
+;(my-install-packages)
 (fset 'yes-or-no-p 'y-or-n-p)
+
 
 ;; Evil
 (setq evil-want-C-u-scroll t)
+(require 'evil-leader)
+(global-evil-leader-mode)
+(evil-leader/set-leader ",")
 (require 'evil)
 (evil-mode 1)
 (require 'evil-surround)
@@ -84,8 +86,25 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
-(define-key evil-normal-state-map (kbd ",f") 'projectile-find-file)
-(define-key evil-normal-state-map (kbd ",,") 'evil-buffer)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "C-x C-d") 'dired)
+(global-set-key (kbd "C-,") 'smex)
+(global-set-key (kbd "<C-mouse-1>") 'find-tag)
+(global-set-key (kbd "<C-down-mouse-1>") nil)
+(global-set-key (kbd "C-s") 'save-buffer)
+(global-set-key (kbd "<f5>") 'projectile-ibuffer)
+(global-set-key (kbd "<f6>") 'magit-status)
+;(global-set-key (kbd "C-x C-b") 'helm-mini)
+
+(evil-leader/set-key
+  "," 'evil-buffer
+  "a" 'projectile-ack
+  "c" 'ace-jump-char-mode
+  "f" 'projectile-find-file
+  "l" 'ace-jump-line-mode
+  "r" 'undo-tree-redo
+  "s" (lambda () (interactive) (save-some-buffers t))
+  "w" 'ace-jump-mode)
 
 (define-key evil-normal-state-map (kbd "q") nil)
 (define-key evil-insert-state-map (kbd "C-d") nil)
@@ -155,7 +174,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "C-c C-f") 'recentf-ido-find-file)
 (global-set-key (kbd "C-c f") 'recentf-ido-find-file)
 (recentf-mode t)
-
+(smex-initialize)
 
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
@@ -183,6 +202,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (require 'flx-ido)
 (ido-mode 1)
 (ido-ubiquitous 1)
+(flx-ido-mode 1)
 (setq ispell-program-name "aspell" ; use aspell instead of ispell
       ispell-extra-args '("--sug-mode=ultra"))
 
@@ -201,26 +221,34 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 
 (require 'volatile-highlights)
-
+(require 'evil-rebellion)
 (require 'surround)
 (global-surround-mode 1)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
+
+(setq browse-url-browser-function 'browse-url-generic
+          browse-url-generic-program "chromium-browser")
+
+(global-undo-tree-mode)
 
 ;; Ack
 (defalias 'ack 'ack-and-a-half)
 (defalias 'ack-same 'ack-and-a-half-same)
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+(require 'projectile)
+(projectile-global-mode)
+;(setq projectile-enable-caching t)
 
-;; Smex: better M-x minibuffer prompt
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "C-x C-d") 'dired)
-(global-set-key (kbd "C-,") 'smex)
-(global-set-key (kbd "<f5>") 'projectile-ibuffer)
-(global-set-key (kbd "<C-mouse-1>") 'find-tag)
-(global-set-key (kbd "<C-down-mouse-1>") nil)
-(global-set-key (kbd "C-s") 'save-buffer)
-;(global-set-key (kbd "C-x C-b") 'helm-mini)
 
 (autoload 'puppet-mode "puppet-mode" "Major mode for editing puppet manifests")
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
@@ -232,7 +260,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
           (lambda ()
 			(flymake-puppet-lint-load)
             (make-local-hook 'before-save-hook)))
-; Auto-complete
+
+;; Auto-complete
 (require 'auto-complete-config)
 (ac-config-default)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
@@ -248,7 +277,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq exec-path (append exec-path '("/home/vagrant/bin")))
 (setq exec-path (append exec-path '("/home/vagrant/.cabal/bin")))
 
-; Haskell
+
+;; Haskell
+
 (setq haskell-program-name "cabal repl")
 
 (autoload 'ghc-init "ghc" nil t)
@@ -276,6 +307,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
      (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
      (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+     (define-key haskell-mode-map [f8] 'haskell-navigate-imports)
+     (define-key haskell-mode-map (kbd "C-;") 'haskell-mode-jump-to-def-or-tag)
      (define-key haskell-mode-map (kbd "C-c M-.") nil)
      (define-key haskell-mode-map (kbd "C-c C-d") nil)))
 
@@ -284,15 +317,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
     (auto-complete-mode t)
     (my-ac-haskell-mode)))
 (add-hook 'find-file-hook 'my-haskell-ac-init)
-; Haskell
-;(autoload 'ghc-init "ghc" nil t)
 ;(add-hook 'haskell-mode-hook (lambda ()
 ;                               (ghc-init)
 ;                               (setq ac-sources (append '(ac-source-ghc-mod) ac-sources))))
 ;(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-;
-(require 'projectile)
-(projectile-global-mode)
-(setq projectile-enable-caching t)
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
