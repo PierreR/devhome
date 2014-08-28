@@ -16,6 +16,7 @@
     ack-and-a-half
     auto-complete
     evil
+    evil-leader
     ghc
     haskell-mode
     ido-ubiquitous
@@ -47,15 +48,26 @@
       (unless (package-installed-p p)
         (package-install p)))))
 
+(defun recentf-ido-find-file ()
+  "Use ido to select a recently opened file"
+  (interactive)
+  (let ((home (expand-file-name (getenv "HOME"))))
+    (find-file
+     (ido-completing-read "Recentf: "
+                          (mapcar (lambda (path)
+                                    (replace-regexp-in-string home "~" path))
+                                  recentf-list)
+                          nil t))))
+
 ;(my-install-packages)
 (fset 'yes-or-no-p 'y-or-n-p)
-
 
 ;; Evil
 (setq evil-want-C-u-scroll t)
 (require 'evil-leader)
 (global-evil-leader-mode)
 (evil-leader/set-leader ",")
+(setq evil-esc-delay 0)
 (require 'evil)
 (evil-mode 1)
 (require 'evil-surround)
@@ -91,7 +103,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "C-,") 'smex)
 (global-set-key (kbd "<C-mouse-1>") 'find-tag)
 (global-set-key (kbd "<C-down-mouse-1>") nil)
-(global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "<f5>") 'projectile-ibuffer)
 (global-set-key (kbd "<f6>") 'magit-status)
 ;(global-set-key (kbd "C-x C-b") 'helm-mini)
@@ -99,8 +110,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (evil-leader/set-key
   "," 'evil-buffer
   "a" 'projectile-ack
+  "b" 'ace-jump-buffer
   "c" 'ace-jump-char-mode
+  "d" 'dired-jump
   "f" 'projectile-find-file
+  "h" 'recentf-ido-find-file
   "l" 'ace-jump-line-mode
   "r" 'undo-tree-redo
   "s" (lambda () (interactive) (save-some-buffers t))
@@ -159,21 +173,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; Recentf
 (setq recentf-max-saved-items 150
       recentf-max-menu-items 15)
-
-(defun recentf-ido-find-file ()
-  "Use ido to select a recently opened file"
-  (interactive)
-  (let ((home (expand-file-name (getenv "HOME"))))
-    (find-file
-     (ido-completing-read "Recentf: "
-                          (mapcar (lambda (path)
-                                    (replace-regexp-in-string home "~" path))
-                                  recentf-list)
-                          nil t))))
-
-(global-set-key (kbd "C-c C-f") 'recentf-ido-find-file)
-(global-set-key (kbd "C-c f") 'recentf-ido-find-file)
 (recentf-mode t)
+
 (smex-initialize)
 
 (setq-default tab-width 4)
@@ -213,7 +214,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
       `((".*" ,temporary-file-directory t)))
 ;(setq make-backup-files nil)
 
-
 ;; tramp, for sudo access
 (require 'tramp)
 ;; keep in mind known issues with zsh - see emacs wiki
@@ -222,10 +222,12 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (require 'volatile-highlights)
 (require 'evil-rebellion)
+(require 'ace-jump-buffer)
 (require 'surround)
 (global-surround-mode 1)
+(require 'projectile)
+(projectile-global-mode)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (autoload
   'ace-jump-mode-pop-mark
@@ -245,16 +247,13 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (defalias 'ack-same 'ack-and-a-half-same)
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-(require 'projectile)
-(projectile-global-mode)
 ;(setq projectile-enable-caching t)
 
-
+;; Puppet
 (autoload 'puppet-mode "puppet-mode" "Major mode for editing puppet manifests")
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
 ; Automatically delete trailing whitespace in puppet-mode
 ;(add-hook 'puppet-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
-
 (require 'flymake-puppet-lint)
 (add-hook 'puppet-mode-hook
           (lambda ()
@@ -276,6 +275,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (setq exec-path (append exec-path '("/home/vagrant/bin")))
 (setq exec-path (append exec-path '("/home/vagrant/.cabal/bin")))
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
 ;; Haskell
