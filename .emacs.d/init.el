@@ -22,27 +22,42 @@
 (require 'volatile-highlights)
 
 ;; keep in mind known issues with zsh - see emacs wiki
-(setq tramp-default-method "ssh")
+(global-auto-revert-mode t)
 (global-surround-mode 1)
-(projectile-global-mode)
-(fset 'yes-or-no-p 'y-or-n-p)
 (global-linum-mode 1)
 (global-hl-line-mode +1)
+(global-undo-tree-mode)
+(projectile-global-mode)
+(fset 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode +1)
 (setq show-paren-style 'parenthesis)
 (set-default 'imenu-auto-rescan t)
 (icomplete-mode +1) ;; auto-completion in minibuffer
+(recentf-mode t)
+
+(ido-mode 1)
+(ido-ubiquitous 1)
+(flx-ido-mode 1)
+
 ;; store all backup and autosave files in the tmp dir
+;(setq make-backup-files nil)
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (setq recentf-max-saved-items 150
       recentf-max-menu-items 15)
-(recentf-mode t)
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 ;(setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
+;; Ido
+(setq ido-enable-flex-matching t
+      ido-everywhere t
+      ido-enable-last-directory-history nil
+      ido-use-virtual-buffers nil
+      ido-use-filename-at-point nil
+      ;; ido-ignore-buffers '("\\` " "^\\*")
+      ido-max-prospects 8)
 
  ;; highlight the current line
 (set-face-background hl-line-face "grey96")
@@ -50,8 +65,10 @@
 ;(set-face-background hl-line-face "grey30")
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(global-undo-tree-mode)
+(smex-initialize)
 
+(setq ispell-program-name "aspell" ; use aspell instead of ispell
+      ispell-extra-args '("--sug-mode=ultra"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -63,27 +80,10 @@
  '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "bf7ed640479049f1d74319ed004a9821072c1d9331bc1147e01d22748c18ebdf" "be7eadb2971d1057396c20e2eebaa08ec4bfd1efe9382c12917c6fe24352b7c1" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
  '(ediff-split-window-function (quote split-window-horizontally))
  '(evil-overriding-maps (quote ((Buffer-menu-mode-map) (color-theme-mode-map) (comint-mode-map) (compilation-mode-map) (dictionary-mode-map) (ert-results-mode-map . motion) (Info-mode-map . motion) (speedbar-key-map) (speedbar-file-key-map) (speedbar-buffers-key-map) (nil) (magit-status-mode-map) (magit-key-mode-maps) (term-mode-map) (shell-mode-map))))
- '(haskell-interactive-mode-eval-pretty nil)
- '(haskell-interactive-mode-include-file-name nil)
- '(haskell-notify-p nil)
- '(haskell-process-args-ghci (quote nil))
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-do-cabal-format-string ":!cd %s && unset GHC_PACKAGE_PATH && %s")
- '(haskell-process-log t)
- '(haskell-process-reload-with-fbytecode nil)
- '(haskell-process-show-debug-tips nil)
- '(haskell-process-suggest-haskell-docs-imports t)
- '(haskell-process-suggest-hoogle-imports nil)
- '(haskell-process-suggest-remove-import-lines t)
- '(haskell-process-type (quote cabal-repl))
- '(haskell-process-use-presentation-mode t)
- '(haskell-stylish-on-save nil)
- '(haskell-tags-on-save t)
  '(inhibit-startup-screen t)
  '(menu-bar-mode nil)
  '(puppet-lint-command "puppet-lint --no-80chars-check --no-documentation-check --no-inherits_across_namespaces-check --no-selector_inside_resource-check --no-quoted_booleans-check --no-class_parameter_defaults-check --with-context --log-format \"%{path}:%{linenumber}: %{kind}: %{message} (%{check})\"")
  '(scroll-bar-mode nil)
- '(show-paren-mode t)
  '(tab-width 4)
  '(tool-bar-mode nil)
  '(tooltip-mode nil)
@@ -95,26 +95,6 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Source Code Pro" :foundry "adobe" :slant normal :weight normal :height 97 :width normal)))))
 
-
-(smex-initialize)
-
-
-;; Ido
-(setq ido-enable-flex-matching t
-      ido-everywhere t
-      ido-enable-last-directory-history nil
-      ido-use-virtual-buffers nil
-      ido-use-filename-at-point nil
-      ;; ido-ignore-buffers '("\\` " "^\\*")
-      ido-max-prospects 8)
-
-(ido-mode 1)
-(ido-ubiquitous 1)
-(flx-ido-mode 1)
-(setq ispell-program-name "aspell" ; use aspell instead of ispell
-      ispell-extra-args '("--sug-mode=ultra"))
-
-;(setq make-backup-files nil)
 
 (autoload
   'ace-jump-mode-pop-mark
@@ -133,8 +113,6 @@
 (defalias 'ack-same 'ack-and-a-half-same)
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-;(setq projectile-enable-caching t)
-
 
 ;; Auto-complete
 (require 'auto-complete-config)
@@ -144,6 +122,7 @@
 (ac-set-trigger-key "TAB")
 
 (require 'multi-term)
+(setq tramp-default-method "ssh")
 (setq multi-term-program "/bin/zsh")
 (setq term-program "/bin/zsh")
 (evil-set-initial-state 'term-mode 'emacs)
