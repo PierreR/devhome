@@ -16,10 +16,13 @@
 (require 'ace-jump-buffer)
 (require 'evil-rebellion)
 (require 'flx-ido)
+(require 'helm-dash)
 (require 'projectile)
 (require 'surround)
 (require 'tramp)
 (require 'volatile-highlights)
+(require 'hindent)
+(require 'multiple-cursors)
 
 ;; keep in mind known issues with zsh - see emacs wiki
 (global-auto-revert-mode t)
@@ -48,6 +51,7 @@
 (setq recentf-max-saved-items 150
       recentf-max-menu-items 15)
 (setq-default tab-width 4)
+(setq column-number-mode t)
 (setq-default indent-tabs-mode nil)
 ;(setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80))
 ;; Ido
@@ -105,7 +109,7 @@
   '(ace-jump-mode-enable-mark-sync))
 
 (setq browse-url-browser-function 'browse-url-generic
-          browse-url-generic-program "chromium-browser")
+          browse-url-generic-program "chromium")
 
 
 ;; Ack
@@ -127,3 +131,5 @@
 (setq term-program "/bin/zsh")
 (evil-set-initial-state 'term-mode 'emacs)
 (evil-set-initial-state 'shell-mode 'emacs)
+
+;;(setq helm-dash-common-docsets '("Redis"))

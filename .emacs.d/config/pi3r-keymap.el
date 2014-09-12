@@ -7,17 +7,29 @@
 (global-set-key (kbd "<f6>") 'magit-status)
 
 (evil-leader/set-key
+  "-" 'comment-or-uncomment-region-or-line
   "," 'evil-buffer
-  "pa" 'projectile-ack
-  "b" 'ace-jump-buffer
+  "!" 'highlight-changes-mode
+  "~" 'toggle-case-fold-search
+  "a" 'ace-jump-mode
+  "b" 'ido-switch-buffer
+  "B" 'ace-jump-buffer
   "c" 'ace-jump-char-mode
   "d" 'dired-jump
   "f" 'ido-find-file
-  "pf" 'projectile-find-file
   "h" 'recentf-ido-find-file
+  ;; i is for show-info
   "l" 'ace-jump-line-mode
+  "j" 'find-tag
+  "pa" 'projectile-ag
+  "pc" 'projectile-compile-project
+  "pf" 'projectile-find-file
+  "ps" 'projectile-switch-project
   "r" 'undo-tree-redo
   "s" (lambda () (interactive) (save-some-buffers t))
-  "w" 'ace-jump-mode)
+  ;; t is for show-type
+  ;; v is used for visit
+  "uv" 'undo-tree-visualize
+  )
 
 (provide 'pi3r-keymap)

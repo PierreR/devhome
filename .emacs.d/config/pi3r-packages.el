@@ -25,6 +25,7 @@
 
 (defvar my-packages
   '(ac-nrepl
+    ag
     ack-and-a-half
     auto-complete
     evil

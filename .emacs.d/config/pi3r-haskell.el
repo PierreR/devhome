@@ -8,6 +8,7 @@
     (auto-complete-mode t)
     (my-ac-haskell-mode)))
 
+
 (autoload 'ghc-init "ghc" nil t)
 (autoload 'ghc-debug "ghc" nil t)
 
@@ -16,6 +17,8 @@
 (add-hook 'haskell-mode-hook 'my-ac-haskell-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
+(add-hook 'haskell-mode-hook (lambda () (setq-local evil-ex-search-case 'sensitive)
+                                        (toggle-case-fold-search nil)))
 
 (setq ghc-ghc-options '("-fno-warn-missing-signatures"))
 (setq ghc-check-warning-fringe 0)
@@ -34,6 +37,7 @@
      '(haskell-process-type (quote cabal-repl))
      '(haskell-process-use-presentation-mode t)
      '(haskell-stylish-on-save nil)
+     '(hindent-style "chris-done")
      '(haskell-tags-on-save t))
 
 (eval-after-load "haskell-cabal"

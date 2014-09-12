@@ -11,6 +11,7 @@
       evil-normal-state-cursor '("grey" box)
       evil-insert-state-cursor '("green" bar)
       evil-visual-state-cursor '("grey50"))
+(setq evil-search-module 'evil-search)
       ;; evil-motion-state-cursor '("grey50")
       ;;evil-emacs-state-modes nil)
 ;; (setq evil-motion-state-modes (append evil-emVacs-state-modes evil-motion-state-modes))
