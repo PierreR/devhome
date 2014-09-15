@@ -133,3 +133,5 @@
 (evil-set-initial-state 'shell-mode 'emacs)
 
 ;;(setq helm-dash-common-docsets '("Redis"))
+
+(activate-package-docsets "/home/vagrant/.docsets/cabal")

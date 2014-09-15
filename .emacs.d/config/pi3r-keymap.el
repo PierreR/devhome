@@ -16,12 +16,14 @@
   "B" 'ace-jump-buffer
   "c" 'ace-jump-char-mode
   "d" 'dired-jump
+  "e" 'helm-dash-at-point
   "f" 'ido-find-file
   "h" 'recentf-ido-find-file
   ;; i is for show-info
   "l" 'ace-jump-line-mode
   "j" 'find-tag
   "pa" 'projectile-ag
+  "pb" 'projectile-switch-to-buffer
   "pc" 'projectile-compile-project
   "pf" 'projectile-find-file
   "ps" 'projectile-switch-project
