@@ -24,6 +24,9 @@
 (require 'hindent)
 (require 'multiple-cursors)
 
+(require 'auto-complete-config)
+;(auto-complete-mode t)
+
 ;; keep in mind known issues with zsh - see emacs wiki
 (global-auto-revert-mode t)
 (global-surround-mode 1)
@@ -119,7 +122,6 @@
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 
 ;; Auto-complete
-(require 'auto-complete-config)
 (ac-config-default)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (setq ac-auto-start nil)
@@ -133,5 +135,6 @@
 (evil-set-initial-state 'shell-mode 'emacs)
 
 ;;(setq helm-dash-common-docsets '("Redis"))
+;;(setq helm-dash-min-length 2)
 
 (activate-package-docsets "/home/vagrant/.docsets/cabal")

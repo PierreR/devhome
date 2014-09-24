@@ -11,6 +11,8 @@
   "," 'evil-buffer
   "!" 'highlight-changes-mode
   "~" 'toggle-case-fold-search
+  "ç" 'evil-backward-paragraph
+  "à" 'evil-forward-paragraph
   "a" 'ace-jump-mode
   "b" 'ido-switch-buffer
   "B" 'ace-jump-buffer

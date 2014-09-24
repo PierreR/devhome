@@ -10,7 +10,7 @@
 
 
 (autoload 'ghc-init "ghc" nil t)
-(autoload 'ghc-debug "ghc" nil t)
+;;(autoload 'ghc-debug "ghc" nil t)
 
 (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 (add-hook 'find-file-hook 'my-haskell-ac-init)
@@ -19,12 +19,14 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
 (add-hook 'haskell-mode-hook (lambda () (setq-local evil-ex-search-case 'sensitive)
                                         (toggle-case-fold-search nil)))
-
+(evil-set-initial-state 'haskell-interactive-mode 'emacs)
 (setq ghc-ghc-options '("-fno-warn-missing-signatures"))
 (setq ghc-check-warning-fringe 0)
 (setq haskell-program-name "cabal repl")
 (custom-set-variables
      '(haskell-notify-p t)
+     '(haskell-interactive-mode-eval-pretty nil) ; deprecated
+     '(haskell-interactive-mode-eval-pretty-result t)
      '(haskell-process-args-ghci (quote nil))
      '(haskell-process-auto-import-loaded-modules t)
      '(haskell-process-do-cabal-format-string ":!cd %s && unset GHC_PACKAGE_PATH && %s")
@@ -34,7 +36,7 @@
      '(haskell-process-suggest-haskell-docs-imports t)
      '(haskell-process-suggest-hoogle-imports nil)
      '(haskell-process-suggest-remove-import-lines t)
-     '(haskell-process-type (quote cabal-repl))
+     '(haskell-process-type 'cabal-repl)
      '(haskell-process-use-presentation-mode t)
      '(haskell-stylish-on-save nil)
      '(hindent-style "chris-done")
