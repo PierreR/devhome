@@ -31,6 +31,7 @@
     auto-complete
     evil
     evil-leader
+	flx-ido
     ghc
     haskell-mode
     ido-ubiquitous
