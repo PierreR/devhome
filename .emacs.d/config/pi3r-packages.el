@@ -25,6 +25,7 @@
 
 (defvar my-packages
   '(ac-nrepl
+	ace-jump-mode
     ag
     ack-and-a-half
     auto-complete

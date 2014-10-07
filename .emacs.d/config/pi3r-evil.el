@@ -10,8 +10,9 @@
 (setq evil-move-cursor-back nil
       evil-normal-state-cursor '("grey" box)
       evil-insert-state-cursor '("green" bar)
-      evil-visual-state-cursor '("grey50"))
-(setq evil-search-module 'evil-search)
+      evil-visual-state-cursor '("grey50")
+      evil-want-visual-char-semi-exclusive t
+      evil-search-module 'evil-search)
       ;; evil-motion-state-cursor '("grey50")
       ;;evil-emacs-state-modes nil)
 ;; (setq evil-motion-state-modes (append evil-emVacs-state-modes evil-motion-state-modes))
@@ -39,5 +40,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key evil-insert-state-map (kbd "C-e") nil) ;; copy from below
 (define-key evil-motion-state-map (kbd "C-e") nil)
 (define-key evil-insert-state-map (kbd "C-k") nil) ;; digraph
+
+(define-key evil-normal-state-map (kbd "ç") 'evil-backward-paragraph)
+(define-key evil-normal-state-map (kbd "à") 'evil-forward-paragraph)
 
 (provide 'pi3r-evil)
