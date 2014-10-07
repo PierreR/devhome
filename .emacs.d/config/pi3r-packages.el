@@ -25,22 +25,23 @@
 
 (defvar my-packages
   '(ac-nrepl
-	ace-jump-mode
+    ace-jump-mode
     ag
     ack-and-a-half
     auto-complete
     evil
     evil-leader
-	flx-ido
+    flx-ido
     ghc
     haskell-mode
-	helm-dash
+    helm-dash
     ido-ubiquitous
     magit
     markdown-mode
+    multiple-cursors
     multi-term
     paredit
-	projectile
+    projectile
     puppet-mode
     smex
     surround
