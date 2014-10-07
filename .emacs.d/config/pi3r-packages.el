@@ -34,6 +34,7 @@
 	flx-ido
     ghc
     haskell-mode
+	helm-dash
     ido-ubiquitous
     magit
     markdown-mode
