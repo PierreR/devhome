@@ -1,7 +1,7 @@
-
 # setup a nice prompt
 source ~/.zsh_prompt
 # autoload -U colors && colors
+autoload -U compinit
 compinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
