@@ -28,10 +28,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium"])
+    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium", "gvim", "emacs"])
 
     -- launch editor
-    , ((modm .|. shiftMask, xK_comma ), spawn "exec `~/bin/subl`")
+    -- , ((modm .|. shiftMask, xK_comma ), spawn "exec `~/bin/subl`")
+    , ((modm .|. shiftMask, xK_comma ), spawn "emacs")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
@@ -57,8 +58,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Move focus to the previous window
     , ((modm,               xK_k     ), windows W.focusUp  )
 
+    -- Expand the master area
+    , ((modm,               xK_m     ), sendMessage zoomIn)
     -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
+    --, ((modm,               xK_m     ), windows W.focusMaster  )
 
     -- Swap the focused window and the master window
     , ((modm,               xK_Return), windows W.swapMaster)
@@ -72,8 +75,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Shrink the master area
     , ((modm,               xK_h     ), sendMessage zoomOut)
 
-    -- Expand the master area
-    , ((modm,               xK_m     ), sendMessage zoomIn)
 
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
@@ -83,7 +84,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
-
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
@@ -146,7 +146,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = Mirror tiled ||| Mirror zoomRow ||| zoomRow ||| Full ||| tiled
+myLayout = Mirror zoomRow ||| Mirror tiled ||| zoomRow ||| Full ||| tiled
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -229,7 +229,7 @@ main = do
 myConfig  = defaultConfig {
   -- simple stuff
   terminal           = "lxterminal",
-  focusFollowsMouse  = True,
+  focusFollowsMouse  = False,
   borderWidth        = 1,
   modMask            = mod4Mask,
   workspaces         = ["1","2","3","4","5","6","7","8","9"],
