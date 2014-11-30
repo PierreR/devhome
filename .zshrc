@@ -19,6 +19,7 @@ bindkey -e
 # alias vim='gvim --remote-silent'
 # alias vim='vim --servername VIM'
 alias xclip='xclip -selection c'
+alias cabaldeps='cabal install --only-dependencies'
 alias salt='sudo salt'
 alias view='vim -R'
 alias ls='ls --color=auto'
@@ -54,12 +55,20 @@ function swift_pra () {
 }
 
 function presources () {
-    puppetresources -p . -o $1 --hiera ./tests/hiera.yaml --facts-override tests/facts-${2}.yaml --pdbfile tests/facts.yaml  -v ERROR --ignoremodules java ${@:3}
+    puppetresources -p . -o $1 --hiera ./tests/hiera.yaml --facts-override tests/facts-${2}.yaml --pdbfile tests/facts.yaml  --ignoremodules java ${@:3}
 }
 
+function prole () {
+   local catalogdir='/home/vagrant/projects/cicd/puppet-stack-middleware'
+   local mountpoint='/catalog'
+   local cmd="${mountpoint}/bin/presources"
+   docker run  --rm=true -v $catalogdir:$mountpoint -t pierrer/puppetresources $cmd $1 $2 ${@:3}
+}
 alias sshi_puppetmaster_dev=' sshi 192.168.30.123'
 alias sshi_puppetmaster_staging=' sshi 192.168.30.105'
+alias sshi_puppetmaster_prod=' sshi puppet2.prd.srv.cirb.lan'
 alias sshi_jenkinsmaster_staging=' sshi 192.168.30.118'
 alias sshi_jenkinsmaster_prod=' sshi jenkins2.prd.srv.cirb.lan'
 alias sshi_jenkinsslave_staging=' sshi 192.168.30.140'
+alias sshi_jenkinsslave_prod=' sshi SVAPPCAVL248.prd.srv.cirb.lan'
 source /etc/profile.d/autojump.zsh
