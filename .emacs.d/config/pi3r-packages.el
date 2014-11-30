@@ -43,6 +43,7 @@
     paredit
     projectile
     puppet-mode
+    solarized-theme
     smex
     surround
     undo-tree
@@ -50,6 +51,6 @@
     yaml-mode
     zenburn-theme))
 
-;(my-install-packages)
+;;(my-install-packages)
 
 (provide 'pi3r-packages)
