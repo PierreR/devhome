@@ -28,11 +28,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium", "gvim", "emacs"])
+    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium", "gvim" ])
 
     -- launch editor
     -- , ((modm .|. shiftMask, xK_comma ), spawn "exec `~/bin/subl`")
-    , ((modm .|. shiftMask, xK_comma ), spawn "emacs")
+    , ((modm .|. shiftMask, xK_comma ), spawn "emacsclient -c")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
