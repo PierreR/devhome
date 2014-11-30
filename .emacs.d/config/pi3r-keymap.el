@@ -10,12 +10,12 @@
   "," 'evil-buffer
   "!" 'highlight-changes-mode
   "~" 'toggle-case-fold-search
-  "a" 'ace-jump-mode
+  "a" 'align
   "b" 'ido-switch-buffer
   "B" 'ace-jump-buffer
   "c" 'ace-jump-char-mode
   "d" 'dired-jump
-  "e" 'helm-dash-at-point
+  ;; e is for ghc-display-errors
   "f" 'ido-find-file
   "h" 'recentf-ido-find-file
   ;; i is for show-info
@@ -28,9 +28,11 @@
   "ps" 'projectile-switch-project
   "r" 'undo-tree-redo
   "s" (lambda () (interactive) (save-some-buffers t))
+  "z" 'helm-dash-at-point
   ;; t is for show-type
   ;; v is used for visit
   "uv" 'undo-tree-visualize
+  "w"  'ace-jump-mode
   )
 
 (provide 'pi3r-keymap)
