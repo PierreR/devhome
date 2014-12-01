@@ -1,3 +1,4 @@
+(require 'hi2)
 (require 'haskell-mode)
 (require 'haskell-interactive-mode)
 
@@ -11,20 +12,28 @@
     (auto-complete-mode t)
     (my-ac-haskell-mode)))
 
+(defun my-save-buffer ()
+  (if (buffer-file-name)
+         (progn (ghc-save-buffer))
+       (message "no file is associated to this buffer: do nothing")))
+
+(add-hook 'evil-insert-state-exit-hook (lambda ()
+                                         (my-save-buffer)
+                                         (hi2-disable-show-indentations)))
+(add-hook 'evil-insert-state-entry-hook 'hi2-enable-show-indentations)
 
 (autoload 'ghc-init "ghc" nil t)
 ;;(autoload 'ghc-debug "ghc" nil t)
 (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 (add-hook 'find-file-hook 'my-haskell-ac-init)
 (add-hook 'haskell-mode-hook 'my-ac-haskell-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 ;(add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
-;; (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
 (add-hook 'haskell-mode-hook (lambda () (setq-local evil-ex-search-case 'sensitive)
                                         (toggle-case-fold-search nil)
+                                        (turn-on-hi2)
                                         (turn-on-haskell-decl-scan)))
 
-(evil-set-initial-state 'haskell-interactive-mode 'emacs)
+(evil-set-initial-state 'haskell-interactive-mode 'insert)
 (setq ghc-ghc-options '("-fno-warn-missing-signatures"))
 (setq ghc-check-warning-fringe 0)
 (setq haskell-program-name "cabal repl")
@@ -49,8 +58,10 @@
      '(tab-stop-list '(4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60)))
 
 
-(eval-after-load "haskell-cabal"
-  '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
+(define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+(define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+;; (eval-after-load "haskell-cabal"
+;;   '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile))
 
 ;(defalias 'ghc-save-buffer 'save-buffer)
 
@@ -61,16 +72,15 @@
      (evil-leader/set-key-for-mode 'haskell-mode "i" 'ghc-show-info)
      (evil-leader/set-key-for-mode 'haskell-mode "e" 'ghc-display-errors)
      (evil-leader/set-key-for-mode 'haskell-mode "vc" 'haskell-cabal-visit-file)
-     (evil-leader/set-key-for-mode 'haskell-mode "vs" 'haskell-interactive-switch)
-     (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
-     (define-key haskell-mode-map [f8] 'haskell-navigate-imports)
-     (define-key haskell-mode-map (kbd "C-;") 'haskell-mode-jump-to-def-or-tag)
 
      (define-key haskell-mode-map [f2] 'haskell-process-load-or-reload)
+     (define-key haskell-mode-map [f8] 'haskell-navigate-imports)
+     (define-key haskell-mode-map (kbd "C-;") 'haskell-mode-jump-to-def-or-tag)
      (define-key haskell-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-     (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
      (define-key haskell-mode-map (kbd "C-<left>") 'haskell-move-nested-left)
      (define-key haskell-mode-map (kbd "C-<right>") 'haskell-move-nested-right)
+     (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+     (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
      (define-key haskell-mode-map (kbd "C-x C-d") nil)
      (define-key haskell-mode-map (kbd "C-c M-.") nil)
      (define-key haskell-mode-map (kbd "C-c TAB") nil)

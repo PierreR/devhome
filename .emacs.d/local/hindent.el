@@ -2,6 +2,10 @@
 
 ;; Copyright (c) 2014 Chris Done. All rights reserved.
 
+;; Author: Chris Done <chrisdone@gmail.com>
+;; URL: https://github.com/chrisdone/hindent
+;; Package-Requires: ((cl-lib "0.5"))
+
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 3, or (at your option)
@@ -17,12 +21,15 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (defcustom hindent-style
   "fundamental"
   "The style to use for formatting."
   :group 'haskell
   :type 'string)
 
+;;;###autoload
 (defun hindent/reformat-decl ()
   "Re-format the current declaration by parsing and pretty
   printing it. Comments are preserved, although placement may be
@@ -59,12 +66,15 @@
                               (col (current-column)))
                           (delete-region (car start-end)
                                          (cdr start-end))
-                          (insert new-str)
-                          (goto-char (point-min))
-                          (forward-line (1- line))
-                          (goto-char (+ (line-beginning-position) col))
-                          (when (looking-back "^[ ]+")
-                            (back-to-indentation))
+                          (let ((new-start (point)))
+                            (insert new-str)
+                            (let ((new-end (point)))
+                              (goto-char (point-min))
+                              (forward-line (1- line))
+                              (goto-char (+ (line-beginning-position) col))
+                              (when (looking-back "^[ ]+")
+                                (back-to-indentation))
+                              (delete-trailing-whitespace new-start new-end)))
                           (message "Formatted."))
                       (message "Already formatted.")))))))))))))
 
@@ -89,42 +99,35 @@ expected to work."
       (or (looking-at "^-}$")
           (looking-at "^{-$")))
     nil)
-   ((bound-and-true-p structured-haskell-repl-mode)
-    (case major-mode
-      (haskell-interactive-mode
-       ;; If the prompt start is available.
-       (when (boundp 'haskell-interactive-mode-prompt-start)
-         ;; Unless we're running code.
-         (unless (> (point)
-                    (save-excursion (goto-char haskell-interactive-mode-prompt-start)
-                                    (line-end-position)))
-           ;; When we're within the prompt and not on some output lines or whatever.
-           (when (and (>= (point) haskell-interactive-mode-prompt-start)
-                      (not (= haskell-interactive-mode-prompt-start
-                              (line-end-position))))
-             (let ((whole-line (buffer-substring-no-properties
-                                haskell-interactive-mode-prompt-start
-                                (line-end-position))))
-               ;; Don't activate if we're doing a GHCi command.
-               (unless (string-match "^:" whole-line)
-                 (cons haskell-interactive-mode-prompt-start
-                       (line-end-position)))))))
-       )))
    ;; Otherwise we just do our line-based hack.
    (t
     (save-excursion
-      (let ((start (or (progn (goto-char (line-end-position))
-                              (search-backward-regexp "^[^ \n]" nil t 1)
-                              (unless (or (looking-at "^-}$")
-                                          (looking-at "^{-$"))
-                                (point)))
+      (let ((start (or (flet
+                           ((jump ()
+                                  (search-backward-regexp "^[^ \n]" nil t 1)
+                                  (cond
+                                   ((save-excursion (goto-char (line-beginning-position))
+                                                    (looking-at "|]"))
+                                    (jump))
+                                   (t (unless (or (looking-at "^-}$")
+                                                  (looking-at "^{-$"))
+                                        (point))))))
+                         (goto-char (line-end-position))
+                         (jump))
                        0))
             (end (progn (goto-char (1+ (point)))
-                        (or (when (search-forward-regexp "[\n]+[^ \n]" nil t 1)
-                              (forward-char -1)
-                              (search-backward-regexp "[^\n ]" nil t)
-                              (forward-char)
-                              (point))
+                        (or (flet
+                                ((jump ()
+                                       (when (search-forward-regexp "[\n]+[^ \n]" nil t 1)
+                                         (cond
+                                          ((save-excursion (goto-char (line-beginning-position))
+                                                           (looking-at "|]"))
+                                           (jump))
+                                          (t (forward-char -1)
+                                             (search-backward-regexp "[^\n ]" nil t)
+                                             (forward-char)
+                                             (point))))))
+                              (jump))
                             (point-max)))))
         (cons start end))))))
 
@@ -149,3 +152,5 @@ expected to work."
                               (looking-at "{-# "))))))
 
 (provide 'hindent)
+
+;;; hindent.el ends here

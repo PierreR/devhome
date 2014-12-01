@@ -127,14 +127,15 @@
 (setq ac-auto-start nil)
 (ac-set-trigger-key "TAB")
 
-(require 'multi-term)
-(setq tramp-default-method "ssh")
-(setq multi-term-program "/bin/zsh")
+;; (require 'multi-term)
+;(setq tramp-efault-method "ssh")
+;(setq multi-term-program "/bin/zsh")
 (setq term-program "/bin/zsh")
 (evil-set-initial-state 'term-mode 'emacs)
 (evil-set-initial-state 'shell-mode 'emacs)
 
 ;;(setq helm-dash-common-docsets '("Redis"))
-;;(setq helm-dash-min-length 2)
-
+(setq helm-dash-min-length 3)
+;(setq helm-dash-browser-func 'eww)
 (activate-package-docsets "/home/vagrant/.docsets/cabal")
+(setq hi2-show-indentations nil)
