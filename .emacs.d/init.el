@@ -28,6 +28,7 @@
 ;(auto-complete-mode t)
 
 ;; keep in mind known issues with zsh - see emacs wiki
+(powerline-evil-vim-color-theme)
 (global-auto-revert-mode t)
 (global-surround-mode 1)
 (global-linum-mode 1)

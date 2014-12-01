@@ -1,5 +1,6 @@
 (setq evil-want-C-u-scroll t)
 (require 'evil-leader)
+(require 'powerline-evil)
 (global-evil-leader-mode)
 (evil-leader/set-leader ",")
 (setq evil-esc-delay 0)

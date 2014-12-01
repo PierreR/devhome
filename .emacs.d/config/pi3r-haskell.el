@@ -17,10 +17,6 @@
          (progn (ghc-save-buffer))
        (message "no file is associated to this buffer: do nothing")))
 
-(add-hook 'evil-insert-state-exit-hook (lambda ()
-                                         (my-save-buffer)
-                                         (hi2-disable-show-indentations)))
-(add-hook 'evil-insert-state-entry-hook 'hi2-enable-show-indentations)
 
 (autoload 'ghc-init "ghc" nil t)
 ;;(autoload 'ghc-debug "ghc" nil t)
@@ -28,10 +24,15 @@
 (add-hook 'find-file-hook 'my-haskell-ac-init)
 (add-hook 'haskell-mode-hook 'my-ac-haskell-mode)
 ;(add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
-(add-hook 'haskell-mode-hook (lambda () (setq-local evil-ex-search-case 'sensitive)
-                                        (toggle-case-fold-search nil)
-                                        (turn-on-hi2)
-                                        (turn-on-haskell-decl-scan)))
+(add-hook 'haskell-mode-hook (lambda ()
+     (add-hook 'evil-insert-state-exit-hook (lambda ()
+                                         (my-save-buffer)
+                                         (hi2-disable-show-indentations)) nil 'local)
+     (add-hook 'evil-insert-state-entry-hook 'hi2-enable-show-indentations nil 'local)
+     (setq-local evil-ex-search-case 'sensitive)
+     (toggle-case-fold-search nil)
+     (turn-on-hi2)
+     (turn-on-haskell-decl-scan)))
 
 (evil-set-initial-state 'haskell-interactive-mode 'insert)
 (setq ghc-ghc-options '("-fno-warn-missing-signatures"))
@@ -68,6 +69,7 @@
 ;; Use haskell-interactive-mode instead of the default inferior-haskell-mode
 (eval-after-load "haskell-mode"
   '(progn
+
      (evil-leader/set-key-for-mode 'haskell-mode "t" 'ghc-show-type)
      (evil-leader/set-key-for-mode 'haskell-mode "i" 'ghc-show-info)
      (evil-leader/set-key-for-mode 'haskell-mode "e" 'ghc-display-errors)
