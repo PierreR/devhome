@@ -34,12 +34,12 @@ Valid Values: standard, verbose, visual-expanded"
   :group 'powerline)
 
 (defface powerline-evil-normal-face
-  '((t (:background "green" :inherit powerline-evil-base-face)))
+  '((t (:background "blue" :inherit powerline-evil-base-face)))
   "Powerline face for evil NORMAL state."
   :group 'powerline)
 
 (defface powerline-evil-insert-face
-  '((t (:background "blue" :inherit powerline-evil-base-face)))
+  '((t (:background "green" :inherit powerline-evil-base-face)))
   "Powerline face for evil INSERT state."
   :group 'powerline)
 
