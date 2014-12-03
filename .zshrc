@@ -59,7 +59,7 @@ function presources () {
 }
 
 function prole () {
-   local catalogdir='/home/vagrant/projects/cicd/puppet-stack-middleware'
+   local catalogdir=$(pwd)
    local mountpoint='/catalog'
    local cmd="${mountpoint}/bin/presources"
    docker run  --rm=true -v $catalogdir:$mountpoint -t pierrer/puppetresources $cmd $1 $2 ${@:3}
