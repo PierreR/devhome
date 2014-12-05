@@ -1,10 +1,14 @@
 (require 'haskell-mode)
 (require 'hi2)
-
+;; (require 'ac-ghc-mod)
 (defun my-ac-haskell-mode ()
   (setq ac-sources '(ac-source-words-in-same-mode-buffers
-             ac-source-dictionary
-             ac-source-ghc-mod)))
+             ac-source-dictionary)))
+             ;; ac-source-ghc-module
+             ;; ac-source-ghc-symbol
+             ;; ac-source-ghc-pragmas
+             ;; ac-source-ghc-langexts)))
+             ;; ac-source-ghc-mod)))
 
 (defun my-haskell-ac-init ()
   (when (member (file-name-extension buffer-file-name) '("hs" "lhs"))
@@ -44,7 +48,9 @@
                                  (add-hook 'evil-insert-state-entry-hook 'hi2-enable-show-indentations nil 'local)
                                  (ghc-init)
                                  (turn-on-hi2)
-                                 (my-haskell-ac-init)
+                                 ;; (my-haskell-ac-init)
+                                 (company-mode)
+                                 (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))
                                  (toggle-case-fold-search nil))))
 
 (evil-set-initial-state 'haskell-interactive-mode 'insert)
@@ -53,6 +59,7 @@
 (setq haskell-program-name "cabal repl")
 (custom-set-variables
      ;; '(tab-stop-list '(4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60))
+     '(company-ghc-show-info t)
      '(haskell-notify-p t)
      '(haskell-interactive-mode-eval-pretty nil) ; deprecated
      '(haskell-interactive-mode-eval-pretty-result t)
@@ -81,10 +88,11 @@
 ;; Use haskell-interactive-mode instead of the default inferior-haskell-mode
 (eval-after-load "haskell-mode"
   '(progn
-
-     (evil-leader/set-key-for-mode 'haskell-mode "t" 'ghc-show-type)
-     (evil-leader/set-key-for-mode 'haskell-mode "i" 'ghc-show-info)
+     (evil-leader/set-key-for-mode 'haskell-mode "&" 'hindent/reformat-decl)
      (evil-leader/set-key-for-mode 'haskell-mode "e" 'ghc-display-errors)
+     (evil-leader/set-key-for-mode 'haskell-mode "i" 'ghc-show-info)
+     (evil-leader/set-key-for-mode 'haskell-mode "o" 'company-ghc-complete-by-hoogle)
+     (evil-leader/set-key-for-mode 'haskell-mode "t" 'ghc-show-type)
      (evil-leader/set-key-for-mode 'haskell-mode "vc" 'haskell-cabal-visit-file)
 
      (define-key haskell-mode-map (kbd "C-x C-d") nil)

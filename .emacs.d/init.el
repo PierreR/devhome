@@ -13,6 +13,7 @@
 (require 'pi3r-haskell)
 (require 'pi3r-keymap)
 
+(require 'linum-relative)
 (require 'ace-jump-buffer)
 (require 'evil-rebellion)
 (require 'flx-ido)
@@ -23,8 +24,10 @@
 (require 'volatile-highlights)
 (require 'hindent)
 (require 'multiple-cursors)
+(require 'company)
 
-(require 'auto-complete-config)
+(add-hook 'after-init-hook 'global-company-mode)
+;; (require 'auto-complete-config)
 ;(auto-complete-mode t)
 
 ;; keep in mind known issues with zsh - see emacs wiki

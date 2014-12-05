@@ -15,12 +15,13 @@
   "B" 'ace-jump-buffer
   "c" 'ace-jump-char-mode
   "d" 'dired-jump
-  ;; e is for ghc-display-errors
+;; e is for ghc-display-errors
   "f" 'ido-find-file
   "h" 'recentf-ido-find-file
-  ;; i is for show-info
+;; i is for show-info
   "l" 'ace-jump-line-mode
   "j" 'find-tag
+;; o is taken for hoogle
   "pa" 'projectile-ag
   "pb" 'projectile-switch-to-buffer
   "pc" 'projectile-compile-project
@@ -28,11 +29,11 @@
   "ps" 'projectile-switch-project
   "r" 'undo-tree-redo
   "s" (lambda () (interactive) (save-some-buffers t))
-  "z" 'helm-dash-at-point
-  ;; t is for show-type
-  ;; v is used for visit
+;; t is for show-type
   "uv" 'undo-tree-visualize
+;; v is used for visit
   "w"  'ace-jump-mode
+  "z" 'helm-dash-at-point
   )
 
 (provide 'pi3r-keymap)
