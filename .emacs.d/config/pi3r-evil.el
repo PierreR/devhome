@@ -35,7 +35,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
 (define-key company-active-map [escape] 'company-abort)
+(define-key company-active-map (kbd "j") 'company-select-next)
+(define-key company-active-map (kbd "k") 'company-select-previous)
+
 (define-key evil-normal-state-map (kbd "q") nil)
 (define-key evil-insert-state-map (kbd "C-d") nil)
 (define-key evil-insert-state-map (kbd "C-e") nil) ;; copy from below
