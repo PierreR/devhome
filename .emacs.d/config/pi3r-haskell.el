@@ -38,18 +38,19 @@
 
 ;; (defvar haskell-process-use-ghci nil)
 
+(autoload 'ghc-init "ghc" nil t)
 ;;(autoload 'ghc-debug "ghc" nil t)
+
 (add-hook 'haskell-mode-hook 'haskell-hook)
 (add-hook 'haskell-mode-hook (lambda ()
+                               (ghc-init)
                                (when (buffer-file-name)
                                  (add-hook 'evil-insert-state-exit-hook (lambda ()
                                          (my-save-buffer)
                                          (hi2-disable-show-indentations)) nil 'local)
                                  (add-hook 'evil-insert-state-entry-hook 'hi2-enable-show-indentations nil 'local)
-                                 (ghc-init)
                                  (turn-on-hi2)
                                  ;; (my-haskell-ac-init)
-                                 (company-mode)
                                  (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))
                                  (toggle-case-fold-search nil))))
 

@@ -126,10 +126,10 @@
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 
 ;; Auto-complete
-(ac-config-default)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(setq ac-auto-start nil)
-(ac-set-trigger-key "TAB")
+;; (ac-config-default)
+;; (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+;; (setq ac-auto-start nil)
+;; (ac-set-trigger-key "TAB")
 
 ;; (require 'multi-term)
 ;(setq tramp-efault-method "ssh")
