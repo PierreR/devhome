@@ -30,6 +30,8 @@
     ag
     ack-and-a-half
     auto-complete
+    company
+    company-ghc
     evil
     evil-leader
     flx-ido

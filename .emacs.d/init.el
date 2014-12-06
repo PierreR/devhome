@@ -6,8 +6,12 @@
 (setq exec-path (append exec-path '("/home/vagrant/bin")))
 (setq exec-path (append exec-path '("/home/vagrant/.cabal/bin")))
 
+
 (require 'pi3r-defun)
 (require 'pi3r-packages)
+
+(require 'company)
+
 (require 'pi3r-evil)
 (require 'pi3r-puppet)
 (require 'pi3r-haskell)
@@ -24,7 +28,6 @@
 (require 'volatile-highlights)
 (require 'hindent)
 (require 'multiple-cursors)
-(require 'company)
 
 (add-hook 'after-init-hook 'global-company-mode)
 ;; (require 'auto-complete-config)
