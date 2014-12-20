@@ -1,19 +1,6 @@
 (require 'haskell-mode)
 (require 'hi2)
 ;; (require 'ac-ghc-mod)
-(defun my-ac-haskell-mode ()
-  (setq ac-sources '(ac-source-words-in-same-mode-buffers
-             ac-source-dictionary)))
-             ;; ac-source-ghc-module
-             ;; ac-source-ghc-symbol
-             ;; ac-source-ghc-pragmas
-             ;; ac-source-ghc-langexts)))
-             ;; ac-source-ghc-mod)))
-
-(defun my-haskell-ac-init ()
-  (when (member (file-name-extension buffer-file-name) '("hs" "lhs"))
-    (auto-complete-mode t)
-    (my-ac-haskell-mode)))
 
 (defun my-save-buffer ()
   (if (buffer-file-name)
@@ -50,7 +37,6 @@
                                          (hi2-disable-show-indentations)) nil 'local)
                                  (add-hook 'evil-insert-state-entry-hook 'hi2-enable-show-indentations nil 'local)
                                  (turn-on-hi2)
-                                 ;; (my-haskell-ac-init)
                                  (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))
                                  (toggle-case-fold-search nil))))
 
@@ -60,7 +46,7 @@
 (setq haskell-font-lock-symbols t)
 (setq haskell-program-name "cabal repl")
 (custom-set-variables
-     ;; '(tab-stop-list '(4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60))
+     '(tab-stop-list '(4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60))
      '(company-ghc-show-info t)
      '(haskell-notify-p t)
      '(haskell-interactive-mode-eval-pretty nil) ; deprecated

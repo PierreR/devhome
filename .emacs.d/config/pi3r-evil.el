@@ -48,5 +48,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (define-key evil-normal-state-map (kbd "ç") 'evil-backward-paragraph)
 (define-key evil-normal-state-map (kbd "à") 'evil-forward-paragraph)
+(custom-set-variables
+ '(evil-auto-indent nil))
 
 (provide 'pi3r-evil)
