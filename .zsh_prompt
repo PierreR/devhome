@@ -99,14 +99,14 @@ setprompt () {
 
     # The variables are wrapped in %{%}. This should be the case for every
     # variable that does not contain space.
-    for COLOR in RED GREEN YELLOW BLUE WHITE BLACK; do
+    for COLOR in RED GREEN YELLOW BLUE WHITE BLACK MAGENTA; do
         eval PR_$COLOR='%{$fg_no_bold[${(L)COLOR}]%}'
         eval PR_BOLD_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
     done
 
     # Finally, let's set the prompt
     PROMPT='
-${PR_YELLOW}@%M ${PR_WHITE}%~\
+${PR_YELLOW}@%M ${PR_MAGENTA}%~\
 ${PR_BOLD_BLUE}${PR_SCREEN}${PR_JOBS}${PR_GIT}\
 ${PR_RED}${VIMODE} ${PR_BOLD_BLACK}>\
 %{${reset_color}%} '
@@ -115,4 +115,3 @@ ${PR_RED}${VIMODE} ${PR_BOLD_BLACK}>\
 
     RPROMPT=""
 setprompt
-
