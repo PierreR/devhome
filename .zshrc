@@ -19,7 +19,7 @@ bindkey -e
 # alias vim='gvim --remote-silent'
 # alias vim='vim --servername VIM'
 alias xclip='xclip -selection c'
-alias cabaldeps='cabal install --only-dependencies'
+alias cabaldeps='cabal install --only-dependencies -j4'
 alias salt='sudo salt'
 alias view='vim -R'
 alias ls='ls --color=auto'
@@ -31,11 +31,18 @@ alias df=" df -h"
 alias ag="ag --color-line-number=2"
 #alias hoogle="hoogle --color"
 
+alias install="yaourt"
 alias __reload_zsh='source ~/.zshrc'
 alias __reflector=' sudo reflector --verbose -l 6 --sort rate --save /etc/pacman.d/mirrorlist'
 alias __mount_shared='sudo mount -t vboxsf shared /media/sf_shared'
 alias __mount_usb='sudo mount /dev/sdb /mnt/usb'
 
+alias dim='light -U 5'
+alias bright='light -A 5'
+alias reboot="sudo systemctl reboot"
+alias shutdown="sudo systemctl poweroff"
+alias suspend="sudo systemctl suspend"
+alias lock="slock"
 #cdpath+=(~/projects/cicd)
 
 function sshi () {
@@ -64,6 +71,24 @@ function prole () {
    local cmd="${mountpoint}/bin/presources"
    docker run  --rm=true -v $catalogdir:$mountpoint -t pierrer/puppetresources $cmd $1 $2 ${@:3}
 }
+
+# set dual monitors
+function setresol () {
+    xrandr  --output DisplayPort-2 --mode 1920x1080 -r 60
+}
+function dual () {
+    xrandr --output DisplayPort-2 --mode 1920x1080 --rate 60 --primary --right-of LVDS --output LVDS --auto
+}
+function laptop () {
+    xrandr --output DisplayPort-2 --off --output LVDS --auto
+}
+
+# set single monitor
+function single () {
+    xrandr --output DisplayPort-2 --mode 1920x1080 --rate 60 --output LVDS --off
+}
+
+
 alias sshi_puppetmaster_dev=' sshi 192.168.30.123'
 alias sshi_puppetmaster_staging=' sshi 192.168.30.105'
 alias sshi_puppetmaster_prod=' sshi puppet2.prd.srv.cirb.lan'
