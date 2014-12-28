@@ -2,19 +2,20 @@
 -- xmonad config file.
 --
 
-import XMonad
-import XMonad.Actions.GridSelect
-import Data.Monoid
-import System.Exit
+import           Data.Monoid
+import           System.Exit
+import           XMonad
+import           XMonad.Actions.GridSelect
 
-import XMonad.Config.Azerty
-import XMonad.Hooks.SetWMName
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Util.Run
-import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
-import XMonad.Layout.ZoomRow
+import qualified Data.Map                     as M
+import           Graphics.X11.ExtraTypes.XF86
+import           XMonad.Config.Azerty
+import           XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.SetWMName
+import           XMonad.Layout.ZoomRow
+import qualified XMonad.StackSet              as W
+import           XMonad.Util.Run
 
 -- Some doc
 -- .|. is xmonad specific : it is a bitwise "or"
@@ -28,7 +29,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium", "gvim" ])
+    , ((modm, xK_p), spawnSelected defaultGSConfig ["chromium", "firefox", "virtualbox", "gvim" ])
 
     -- launch editor
     -- , ((modm .|. shiftMask, xK_comma ), spawn "exec `~/bin/subl`")
@@ -95,6 +96,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Restart xmonad
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
+
+    -- , ((0 , xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +1.5%")
+    -- , ((0 , xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 1 -- -1.5%")
+    -- , ((0 , xF86XK_AudioMute),        spawn "pactl set-sink-mute 1 toggle")
     ]
     ++
 
