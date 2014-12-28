@@ -30,6 +30,7 @@
 (require 'multiple-cursors)
 
 (add-hook 'after-init-hook 'global-company-mode)
+(define-key company-active-map (kbd "SPC") #'company-complete)
 ;; (require 'auto-complete-config)
 ;(auto-complete-mode t)
 
