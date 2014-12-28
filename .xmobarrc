@@ -6,9 +6,13 @@ Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
              , Run DynNetwork ["-L","0","-H","100","--normal","green","--high","orange"] 10
              , Run Memory ["-t","Mem: <usedratio>%"] 10
              , Run Date "%l:%M" "date" 10
+             , Run BatteryP ["BAT0"]
+              ["-t", "<left>%",
+               "-L", "10", "-H", "50",
+               "--low", "red", "--normal", "blue"] 500
              , Run StdinReader
            ]
      , sepChar = "%"
      , alignSep = "}{"
-     , template = " %StdinReader%}{ <fc=grey>%cpu%</fc><fc=grey>  %memory%  %dynnetwork%</fc>"
+     , template = " %StdinReader%}{ <fc=grey>%cpu%</fc><fc=grey>  %memory% %dynnetwork% %battery% %date%</fc>"
      }
