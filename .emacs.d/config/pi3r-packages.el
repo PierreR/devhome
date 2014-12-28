@@ -38,12 +38,14 @@
     ghc
     haskell-mode
     helm-dash
+    linum-relative
     ido-ubiquitous
     magit
     markdown-mode
     multiple-cursors
     multi-term
     paredit
+    powerline
     projectile
     puppet-mode
     solarized-theme
@@ -54,6 +56,6 @@
     yaml-mode
     zenburn-theme))
 
-;;(my-install-packages)
+;; (my-install-packages)
 
 (provide 'pi3r-packages)
