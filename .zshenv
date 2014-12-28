@@ -5,4 +5,4 @@ export M2_REPO=~/.m2
 #export GOPATH=/home/xmod/golang
 #export GOBIN=$GOPATH/bin
 # path+=(~/bin $GOBIN ~/projects/bmob/bin ~/.gem/ruby/1.9.1/bin)
-path+=(~/bin ~/.gem/ruby/1.9.1/bin)
+path+=(~/bin ~/.gem/ruby/2.1.0/bin)
