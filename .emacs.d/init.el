@@ -1,12 +1,14 @@
 (require 'cl)
+(require 'recentf)
 
 (add-to-list 'load-path "~/.emacs.d/local")
+(add-to-list 'load-path "~/.emacs.d/local/structured-haskell-mode")
 (add-to-list 'load-path "~/.emacs.d/config")
 
-(setq exec-path (append exec-path '("/home/vagrant/bin")))
-(setq exec-path (append exec-path '("/home/vagrant/.cabal/bin")))
+(setq exec-path (append exec-path '("/home/pierre/bin")))
+(setq exec-path (append exec-path '("/home/pierre/.cabal/bin")))
 
-
+;; (setq haskell-font-lock-symbols t)
 (require 'pi3r-defun)
 (require 'pi3r-packages)
 
@@ -29,12 +31,24 @@
 (require 'hindent)
 (require 'multiple-cursors)
 
-(add-hook 'after-init-hook 'global-company-mode)
-(define-key company-active-map (kbd "SPC") #'company-complete)
-;; (require 'auto-complete-config)
-;(auto-complete-mode t)
+;; Company
+(defun company-complete-common-or-cycle ()
+  (interactive)
+  (when (company-manual-begin)
+    (if (eq last-command 'company-complete-common-or-cycle)
+        (let ((company-selection-wrap-around t))
+          (call-interactively 'company-select-next))
+      (call-interactively 'company-complete-common))))
 
-;; keep in mind known issues with zsh - see emacs wiki
+(define-key company-active-map [tab] 'company-complete-common-or-cycle)
+(define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+(setq company-minimum-prefix-length 3)
+(setq company-auto-complete t)
+(add-hook 'after-init-hook 'global-company-mode)
+;; (setq company-idle-delay 0)
+;; (setq company-selection-wrap-around t)
+
+(setq org-log-done 'time)
 (powerline-evil-vim-color-theme)
 (global-auto-revert-mode t)
 (global-surround-mode 1)
@@ -48,10 +62,11 @@
 (set-default 'imenu-auto-rescan t)
 (icomplete-mode +1) ;; auto-completion in minibuffer
 (recentf-mode t)
-
+(global-font-lock-mode 1)
 (ido-mode 1)
 (ido-ubiquitous 1)
 (flx-ido-mode 1)
+(set-language-environment "UTF-8")
 
 ;; store all backup and autosave files in the tmp dir
 ;(setq make-backup-files nil)
@@ -59,8 +74,26 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
-(setq recentf-max-saved-items 150
-      recentf-max-menu-items 15)
+(setq recentf-exclude '(
+                         "/.emacs.bmk$"
+                         "\\.ido.last$" ; ido mode (emacs)
+                         "session\\.[a-f0-9]*$" ; emacs
+                         "~$" ; emacs (and others) backup
+                         "\\.log$" ; LaTeX
+                         "\\.pdfsync$" ; LaTeX
+                         "\\.toc" ; LaTeX
+                         "\\.aux$" ; LaTeX
+                         "/Dropbox/" ; avoid opening dropbox files, there is probably a local mirror
+                         "/COMMIT_EDITMSG$"
+                         "/TAGS$"
+                         "/tmp/"
+                         ".el.gz$"
+                         ))
+(setq recentf-max-saved-items 250
+      recentf-max-menu-items 35
+      ido-default-buffer-method 'selected-window
+      ido-default-file-method 'selected-window
+      )
 (setq-default tab-width 4)
 (setq column-number-mode t)
 (setq-default indent-tabs-mode nil)
@@ -72,7 +105,7 @@
       ido-use-virtual-buffers nil
       ido-use-filename-at-point nil
       ;; ido-ignore-buffers '("\\` " "^\\*")
-      ido-max-prospects 8)
+      ido-max-prospects 10)
 
  ;; highlight the current line
 (set-face-background hl-line-face "grey96")
@@ -91,13 +124,34 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
+ '(company-ghc-show-info t)
  '(custom-enabled-themes (quote (solarized-light)))
- '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "bf7ed640479049f1d74319ed004a9821072c1d9331bc1147e01d22748c18ebdf" "be7eadb2971d1057396c20e2eebaa08ec4bfd1efe9382c12917c6fe24352b7c1" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
+ '(custom-safe-themes
+   (quote
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "dd4db38519d2ad7eb9e2f30bc03fba61a7af49a185edfd44e020aa5345e3dca7" "bf7ed640479049f1d74319ed004a9821072c1d9331bc1147e01d22748c18ebdf" "be7eadb2971d1057396c20e2eebaa08ec4bfd1efe9382c12917c6fe24352b7c1" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" default)))
  '(ediff-split-window-function (quote split-window-horizontally))
- '(evil-overriding-maps (quote ((Buffer-menu-mode-map) (color-theme-mode-map) (comint-mode-map) (compilation-mode-map) (dictionary-mode-map) (ert-results-mode-map . motion) (Info-mode-map . motion) (speedbar-key-map) (speedbar-file-key-map) (speedbar-buffers-key-map) (nil) (magit-status-mode-map) (magit-key-mode-maps) (term-mode-map) (shell-mode-map))))
+ '(evil-auto-indent nil)
+ '(evil-overriding-maps
+   (quote
+    ((Buffer-menu-mode-map)
+     (color-theme-mode-map)
+     (comint-mode-map)
+     (compilation-mode-map)
+     (dictionary-mode-map)
+     (ert-results-mode-map . motion)
+     (Info-mode-map . motion)
+     (speedbar-key-map)
+     (speedbar-file-key-map)
+     (speedbar-buffers-key-map)
+     (nil)
+     (magit-status-mode-map)
+     (magit-key-mode-maps)
+     (term-mode-map)
+     (shell-mode-map))))
  '(inhibit-startup-screen t)
  '(menu-bar-mode nil)
- '(puppet-lint-command "puppet-lint --no-80chars-check --no-documentation-check --no-inherits_across_namespaces-check --no-selector_inside_resource-check --no-quoted_booleans-check --no-class_parameter_defaults-check --with-context --log-format \"%{path}:%{linenumber}: %{kind}: %{message} (%{check})\"")
+ '(puppet-lint-command
+   "puppet-lint --no-80chars-check --no-documentation-check --no-inherits_across_namespaces-check --no-selector_inside_resource-check --no-quoted_booleans-check --no-class_parameter_defaults-check --with-context --log-format \"%{path}:%{linenumber}: %{kind}: %{message} (%{check})\"")
  '(scroll-bar-mode nil)
  '(tab-width 4)
  '(tool-bar-mode nil)
@@ -122,7 +176,6 @@
 (setq browse-url-browser-function 'browse-url-generic
           browse-url-generic-program "chromium")
 
-
 ;; Ack
 (defalias 'ack 'ack-and-a-half)
 (defalias 'ack-same 'ack-and-a-half-same)
@@ -145,5 +198,4 @@
 ;;(setq helm-dash-common-docsets '("Redis"))
 (setq helm-dash-min-length 3)
 ;(setq helm-dash-browser-func 'eww)
-(activate-package-docsets "/home/vagrant/.docsets/cabal")
-(setq hi2-show-indentations nil)
+(activate-package-docsets "/home/pierre/.docsets/cabal")

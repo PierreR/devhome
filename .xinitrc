@@ -19,6 +19,7 @@ xsetroot -cursor_name left_ptr
 
 # set keyboard layout
 setxkbmap -layout be
+setxkbmap -option "caps:escape"
 
 # enable VBox addition (need sudo here at least in current version)
 VBoxClient-all &
@@ -32,4 +33,5 @@ sh ~/.fehbg &
 # xmodmap ~/.Xmodmap
 # xset b off
 exec xmonad
+#exec startxfce4
 # exec spectrwm

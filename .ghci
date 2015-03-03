@@ -1,6 +1,5 @@
 import Control.Applicative
 import Control.Monad
-import Control.Parallel
 
 import Data.String
 import Data.Char
