@@ -25,7 +25,7 @@ setxkbmap -option "caps:escape"
 VBoxClient-all &
 
 # emacs daemon
-/usr/bin/emacs --daemon
+#/usr/bin/emacs --daemon
 
 # set wallpaper
 sh ~/.fehbg &

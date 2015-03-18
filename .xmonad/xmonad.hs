@@ -33,7 +33,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch editor
     -- , ((modm .|. shiftMask, xK_comma ), spawn "exec `~/bin/subl`")
-    , ((modm .|. shiftMask, xK_comma ), spawn "emacsclient -c")
+    -- , ((modm .|. shiftMask, xK_comma ), spawn "emacsclient -c")
+    , ((modm .|. shiftMask, xK_comma ), spawn "emacs")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")

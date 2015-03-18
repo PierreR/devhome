@@ -46,7 +46,7 @@ alias lock="slock"
 #cdpath+=(~/projects/cicd)
 
 function sshi () {
-	ssh -i ~/.ssh/alhazen_rsa alhazen@$1
+	ssh -A -i ~/.ssh/alhazen_rsa alhazen@$1
 }
 
 function ssrc () {
@@ -88,7 +88,7 @@ function cabal-recreate () {
     cabal sandbox delete
     cabal sandbox init
     cabal configure
-    cabaldeps
+    cabal install --only-dependencies -j
     cabal build -j
 }
 
