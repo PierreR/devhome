@@ -99,7 +99,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
 
     , ((0 , xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 1 +1.5%")
-    , ((0 , xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 1 -- -1.5%")
+    , ((0 , xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 1 -1.5%")
     , ((0 , xF86XK_AudioMute),        spawn "pactl set-sink-mute 1 toggle")
     ]
     ++
