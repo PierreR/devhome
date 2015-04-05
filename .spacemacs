@@ -30,7 +30,6 @@
 This function is called at the very startup of Spacemacs initialization
 before layers configuration."
   (setq term-program "/bin/zsh")
-  (add-to-list 'exec-path "~/bin/")
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
@@ -121,8 +120,12 @@ layers configuration."
         browse-url-generic-program "chromium"
         dash-helm-dash-docset-path "/home/pierre/.docsets/cabal"
         ghc-ghc-options '("-fno-warn-missing-signatures")
+        vc-follow-symlinks t
   )
+  (add-to-list 'exec-path "~/bin/")
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (add-hook 'haskell-mode-hook (lambda ()
+                                 (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will

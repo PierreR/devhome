@@ -98,7 +98,8 @@ alias sshi_puppetmaster_prod=' sshi puppet2.prd.srv.cirb.lan'
 alias sshi_jenkinsmaster_staging=' sshi 192.168.30.118'
 alias sshi_jenkinsmaster_prod=' sshi jenkins2.prd.srv.cirb.lan'
 alias sshi_jenkinsslave_staging=' sshi 192.168.30.140'
-alias sshi_jenkinsslave_prod=' sshi SVAPPCAVL248.prd.srv.cirb.lan'
+alias sshi_jenkinsslave_prod=' sshi SVAPPCAVL555.prd.srv.cirb.lan'
+alias sshi_dockerregistry_prod=' sshi SVAPPCAVL248.prd.srv.cirb.lan'
 source /etc/profile.d/autojump.zsh
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
