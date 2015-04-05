@@ -126,6 +126,25 @@ layers configuration."
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'haskell-mode-hook (lambda ()
                                  (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))))
+
+  (setq recentf-exclude '(
+                          "/.emacs.bmk$"
+                          "\\.ido.last$" ; ido mode (emacs)
+                          "session\\.[a-f0-9]*$" ; emacs
+                          "~$" ; emacs (and others) backup
+                          "\\.log$" ; LaTeX
+                          "\\.spacemacs$" ; use <space> f e d
+                          "\\.pdfsync$" ; LaTeX
+                          "\\.toc" ; LaTeX
+                          "\\.aux$" ; LaTeX
+                          "/Dropbox/" ; avoid opening dropbox files, there is probably a local mirror
+                          "/COMMIT_EDITMSG$"
+                          "/TAGS$"
+                          "/tmp/"
+                          "/elpa/"
+                          "/.cache/"
+                          ".el.gz$"
+                          ))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
