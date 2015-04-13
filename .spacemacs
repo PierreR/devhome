@@ -10,7 +10,7 @@
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers '(company-mode
+   dotspacemacs-configuration-layers '(auto-completion
                                        dash
                                        (haskell :variables
                                                 haskell-enable-hindent-style "ekmett")
@@ -110,6 +110,7 @@ before layers configuration."
    ;; Not used for now.
    dotspacemacs-default-package-repository nil)
   ;; User initialization goes here
+  (add-to-list 'exec-path "~/bin/")
   )
 
 (defun dotspacemacs/config ()
@@ -122,10 +123,10 @@ layers configuration."
         ghc-ghc-options '("-fno-warn-missing-signatures")
         vc-follow-symlinks t
   )
-  (add-to-list 'exec-path "~/bin/")
+  ;; (custom-set-variables '(haskell-process-type 'cabal-repl))
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
-  (add-hook 'haskell-mode-hook (lambda ()
-                                 (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))))
+  ;; (add-hook 'haskell-mode-hook (lambda ()
+  ;;                                (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))))
 
   (setq recentf-exclude '(
                           "/.emacs.bmk$"
@@ -145,6 +146,8 @@ layers configuration."
                           "/.cache/"
                           ".el.gz$"
                           ))
+  (eval-after-load 'haskell-mode
+          '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
