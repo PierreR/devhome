@@ -27,21 +27,32 @@
      consoleKeyMap = "be-latin1";
      defaultLocale = "en_US.UTF-8";
   };
+  users.extraUsers.pierre = {
+    createHome = true;
+    home = "/home/pierre";
+    description = "Pierre Radermecker";
+    extraGroups = [ "wheel" "disk" "vboxusers"];
+    isSystemUser = true;
+    useDefaultShell = true;
+  };
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    silver-searcher
     autojump
     emacs
+    gitFull
     haskellPackages.xmobar
     htop
-    gitFull
+    nix-prefetch-scripts
     nix-repl
     rxvt_unicode
+    silver-searcher
+    unzip
     vim
     wget
     xlibs.xset
+    zip
   ];
 
   # List services that you want to enable:
@@ -63,7 +74,7 @@
     displayManager = {
       sessionCommands = ''
         ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        ${pkgs.feh}/bin/feh --bg-fill "/root/.wallpaper.jpg"
+        ${pkgs.feh}/bin/feh --bg-fill "$HOME/.wallpaper.jpg"
       '';
     };
     windowManager.xmonad.enable = true;
