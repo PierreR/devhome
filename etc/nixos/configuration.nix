@@ -82,6 +82,7 @@
       };
       sessionCommands = ''
         ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
+        sh /home/pierre/.fehbg
       '';
     };
     windowManager.xmonad.enable = true;
