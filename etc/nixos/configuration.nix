@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
     ];
 
+  nixpkgs.config.allowUnfree = true;
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
@@ -33,7 +34,7 @@
     description = "Pierre Radermecker";
     extraGroups = [ "wheel" "disk" "vboxusers"];
     isSystemUser = true;
-    useDefaultShell = true;
+    shell = "/run/current-system/sw/bin/zsh";
   };
 
   # List packages installed in system profile. To search by name, run:
@@ -41,6 +42,8 @@
   environment.systemPackages = with pkgs; [
     autojump
     emacs
+    docker
+    feh
     gitFull
     haskellPackages.xmobar
     htop
@@ -71,21 +74,21 @@
     layout = "be";
     desktopManager.xterm.enable = false;
     desktopManager.default = "none";
+
     displayManager = {
+      slim = {
+       	enable = true;
+       	defaultUser = "pierre";
+      };
       sessionCommands = ''
         ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        ${pkgs.feh}/bin/feh --bg-fill "$HOME/.wallpaper.jpg"
       '';
     };
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.default = "xmonad";
+    xkbOptions = "caps:escape";
   };
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  # users.extraUsers.guest = {
-  #   isNormalUser = true;
-  #   uid = 1000;
-  # };
   fonts = {
     enableCoreFonts = true;
     enableFontDir = true;
@@ -94,6 +97,7 @@
       source-code-pro
     ];
   };
-                                     
+
+  time.timeZone = "Europe/Brussels";
   programs.zsh.enable = true;
 }
