@@ -32,7 +32,7 @@
     createHome = true;
     home = "/home/pierre";
     description = "Pierre Radermecker";
-    extraGroups = [ "wheel" "disk" "vboxusers"];
+    extraGroups = [ "wheel" "disk" "vboxusers" "docker"];
     isSystemUser = true;
     shell = "/run/current-system/sw/bin/zsh";
   };
@@ -100,5 +100,8 @@
   };
 
   time.timeZone = "Europe/Brussels";
+
   programs.zsh.enable = true;
+  security.sudo.wheelNeedsPassword = false;
+  virtualisation.docker.enable = true;
 }
