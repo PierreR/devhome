@@ -9,7 +9,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
-
+  nix.binaryCaches = [ http://hydra.cryp.to/ https://cache.nixos.org/ http://hydra.nixos.org/ ];
+  nix.trustedBinaryCaches = [ "http://hydra.nixos.org" "http://hydra.cryp.to" ];
   nixpkgs.config.allowUnfree = true;
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
@@ -40,11 +41,14 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
+    aspell
     autojump
     emacs
+    chromium
     docker
     feh
     gitFull
+    gnumake
     haskellPackages.xmobar
     htop
     nix-prefetch-scripts
