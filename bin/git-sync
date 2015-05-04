@@ -1,0 +1,9 @@
+#! /bin/env sh
+
+if [ -z "$1" ]; then
+  echo "No argument supplied"; exit 1
+fi
+
+echo "About to sync $1"
+git add $1
+git commit -m "sync $1" && git push && echo "Done"

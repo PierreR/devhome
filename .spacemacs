@@ -10,16 +10,25 @@
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
-   dotspacemacs-configuration-layers '(auto-completion
-                                       dash
-                                       (haskell :variables
-                                                haskell-enable-hindent-style "ekmett")
-                                       git
-                                       markdown
-                                       puppet
-                                       smex)
+   dotspacemacs-configuration-layers
+   '(
+     ;; --------------------------------------------------------
+     ;; Example of useful layers you may want to use right away
+     ;; Uncomment a layer name and press C-c C-c to install it
+     ;; --------------------------------------------------------
+     auto-completion
+     (git :variables
+          git-gutter-use-fringe t)
+     dockerfile
+     extra-langs
+     haskell
+     markdown
+     puppet
+     ;; org
+     syntax-checking
+     )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '(evil-search-highlight-persist)
+   dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'
@@ -29,10 +38,14 @@
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
 before layers configuration."
-  (setq term-program "/bin/zsh")
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
+   ;; is `emacs' then the `holy-mode' is enabled at startup.
+   dotspacemacs-editing-style 'vim
+   ;; If non nil output loading progess in `*Messages*' buffer.
+   dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -40,6 +53,11 @@ before layers configuration."
    ;; If the value is nil then no banner is displayed.
    ;; dotspacemacs-startup-banner 'official
    dotspacemacs-startup-banner 'official
+   ;; t if you always want to see the changelog at startup
+   dotspacemacs-always-show-changelog t
+   ;; List of items to show in the startup buffer. If nil it is disabled.
+   ;; Possible values are: `recents' `bookmarks' `projects'."
+   dotspacemacs-startup-lists '(recents projects)
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -59,9 +77,13 @@ before layers configuration."
                                :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
+   ;; The leader key accessible in `emacs state' and `insert state'
+   dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it.
    dotspacemacs-major-mode-leader-key ","
+   ;; Major mode leader key accessible in `emacs state' and `insert state'
+   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
    ;; The command key used for Evil commands (ex-commands) and
    ;; Emacs commands (M-x).
    ;; By default the command key is `:' so ex-commands are executed like in Vim
@@ -105,28 +127,28 @@ before layers configuration."
    dotspacemacs-smartparens-strict-mode nil
    ;; If non nil advises quit functions to keep server open when quitting.
    dotspacemacs-persistent-server nil
+   ;; List of search tool executable names. Spacemacs uses the first installed
+   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
+   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
-   dotspacemacs-default-package-repository nil)
+   dotspacemacs-default-package-repository nil
+   )
   ;; User initialization goes here
-  (add-to-list 'exec-path "~/bin/")
   )
 
 (defun dotspacemacs/config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+  ;; (setq haskell-program-name "nix-shell -I ~ --command 'cabal repl'")
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
         dash-helm-dash-docset-path "/home/pierre/.docsets/cabal"
         ghc-ghc-options '("-fno-warn-missing-signatures")
         vc-follow-symlinks t
   )
-  ;; (custom-set-variables '(haskell-process-type 'cabal-repl))
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-  ;; (add-hook 'haskell-mode-hook (lambda ()
-  ;;                                (add-to-list 'company-backends '(company-ghc :with company-dabbrev-code))))
 
   (setq recentf-exclude '(
                           "/.emacs.bmk$"
@@ -146,8 +168,12 @@ layers configuration."
                           "/.cache/"
                           ".el.gz$"
                           ))
+
+  (global-auto-revert-mode t)
+  ;; (require 'nix-mode)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (eval-after-load 'haskell-mode
-          '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
+    '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
