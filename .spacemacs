@@ -17,12 +17,12 @@
      ;; Uncomment a layer name and press C-c C-c to install it
      ;; --------------------------------------------------------
      auto-completion
+     dash
      (git :variables
           git-gutter-use-fringe t)
-     dockerfile
-     extra-langs
      haskell
      markdown
+     extra-langs
      puppet
      ;; org
      syntax-checking
@@ -136,20 +136,20 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
+  (setq term-program "/bin/zsh")
   )
 
 (defun dotspacemacs/config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
-  ;; (setq haskell-program-name "nix-shell -I ~ --command 'cabal repl'")
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
         dash-helm-dash-docset-path "/home/pierre/.docsets/cabal"
         ghc-ghc-options '("-fno-warn-missing-signatures")
         vc-follow-symlinks t
   )
-
+  (add-to-list 'exec-path "~/bin/")
   (setq recentf-exclude '(
                           "/.emacs.bmk$"
                           "\\.ido.last$" ; ido mode (emacs)
@@ -169,11 +169,29 @@ layers configuration."
                           ".el.gz$"
                           ))
 
-  (global-auto-revert-mode t)
-  ;; (require 'nix-mode)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (eval-after-load 'haskell-mode
-    '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
+          '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
+
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (global-auto-revert-mode t)
+  (require 'align)
+  ;; align rules
+  (add-to-list 'align-rules-list
+               '(haskell-types
+                 (regexp . "\\(\\s-+\\)\\(::\\|∷\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
+  (add-to-list 'align-rules-list
+               '(haskell-assignment
+                 (regexp . "\\(\\s-+\\)=\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
+  (add-to-list 'align-rules-list
+               '(haskell-arrows
+                 (regexp . "\\(\\s-+\\)\\(->\\|→\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
+  (add-to-list 'align-rules-list
+               '(haskell-left-arrows
+                 (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
