@@ -6,7 +6,7 @@
   "Configuration Layers declaration."
   (setq-default
    ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
+   ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
@@ -17,21 +17,25 @@
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     asciidoc
      auto-completion
      ;; better-defaults
      dash
      emacs-lisp
      extra-langs
-     (git :variables
-          git-gutter-use-fringe t)
+     git
      haskell
      markdown
      ;; org
-     puppet
-     shell
+     (shell :variables
+            shell-default-term-shell "/bin/zsh"
+            shell-default-height 30
+            shell-default-position 'bottom)
      syntax-checking
+     puppet
+     version-control
      )
-   ;; List of additional packages that will be installed wihout being
+   ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
@@ -70,6 +74,8 @@ before layers configuration."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(solarized-light
                          solarized-dark
+                         spacemacs-light
+                         spacemacs-dark
                          leuven
                          monokai
                          zenburn)
@@ -96,6 +102,11 @@ before layers configuration."
    ;; By default the command key is `:' so ex-commands are executed like in Vim
    ;; with `:' and Emacs commands are executed with `<leader> :'.
    dotspacemacs-command-key ":"
+   ;; Location where to auto-save files. Possible values are `original' to
+   ;; auto-save the file in-place, `cache' to auto-save the file to another
+   ;; file stored in the cache directory and `nil' to disable auto-saving.
+   ;; Default value is `cache'.
+   dotspacemacs-auto-save-file-location 'cache
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f) is replaced.
    dotspacemacs-use-ido t
@@ -149,7 +160,7 @@ before layers configuration."
    dotspacemacs-default-package-repository nil
    )
   ;; User initialization goes here
-  (setq term-program "/bin/zsh")
+  (add-to-list `load-path "~/projects/ghc-mod/elisp")
   )
 
 (defun dotspacemacs/config ()
@@ -158,12 +169,17 @@ before layers configuration."
 layers configuration."
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
-        dash-helm-dash-docset-path "/home/pierre/.docsets/cabal"
+        dash-helm-dash-docset-path "~/.docsets/cabal"
         ghc-ghc-options '("-fno-warn-missing-signatures")
         vc-follow-symlinks t
         helm-ag-insert-at-point 'symbol
+        haskell-compile-cabal-build-command "cd %s && stack build"
+        haskell-process-type 'stack-ghci
+        haskell-process-path-ghci "stack"
   )
   (add-to-list 'exec-path "~/bin/")
+  (add-to-list 'exec-path "~/.local/bin/")
+  ;; (add-to-list 'exec-path "~/.cabal/bin/")
   (setq recentf-exclude '(
                           "/.emacs.bmk$"
                           "\\.ido.last$" ; ido mode (emacs)
@@ -208,6 +224,33 @@ layers configuration."
                  (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
                  (modes quote (haskell-mode literate-haskell-mode))))
 )
+;; In haskell, `o` and `O` would automatically insert an indent
+;; This is to prevent it
+(add-hook 'haskell-mode-hook 'redef-evil-open-below)
+(defun redef-evil-open-below ()
+  (defun evil-open-below (count)
+    "Insert a new line below point and switch to Insert state.
+    The insertion will be repeated COUNT times."
+    (interactive "p")
+    (evil-insert-newline-below)
+    (setq evil-insert-count count
+          evil-insert-lines t
+          evil-insert-vcount nil)
+    (evil-insert-state 1)
+    (add-hook 'post-command-hook #'evil-maybe-remove-spaces)
+    )
+  (defun evil-open-above (count)
+    "Insert a new line above point and switch to Insert state.
+    The insertion will be repeated COUNT times."
+    (interactive "p")
+    (evil-insert-newline-above)
+    (setq evil-insert-count count
+          evil-insert-lines t
+          evil-insert-vcount nil)
+    (evil-insert-state 1)
+    (add-hook 'post-command-hook #'evil-maybe-remove-spaces)
+    )
+ )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
