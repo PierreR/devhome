@@ -234,6 +234,8 @@ layers configuration. You are free to put any user code."
 
   ;; In haskell, `o` and `O` would automatically insert an indent
   ;; This is to prevent it
+  ;; This is actually a bug that should be solved by haskell-mode
+  ;; https://github.com/haskell/haskell-mode/issues/896
   (add-hook 'haskell-mode-hook 'redef-evil-open-below)
   (defun redef-evil-open-below ()
     (defun evil-open-below (count)
@@ -262,18 +264,19 @@ layers configuration. You are free to put any user code."
 
   ;; Helm-find-file can open a new window with `c-c o`
   ;; Tweak it so that it behaves like `ido`
-  (require 'helm)
-  (defun fu/helm-find-files-navigate-forward (orig-fun &rest args)
-    (if (file-directory-p (helm-get-selection))
-        (apply orig-fun args)
-      (helm-maybe-exit-minibuffer)))
-  (advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
-  (define-key helm-find-files-map (kbd "RET") 'fu/helm-find-files-navigate-forward)
-  (defun fu/helm-find-files-navigate-back (orig-fun &rest args)
-    (if (= (length helm-pattern) (length (helm-find-files-initial-input)))
-        (helm-find-files-up-one-level 1)
-      (apply orig-fun args)))
-  (advice-add 'helm-ff-delete-char-backward :around #'fu/helm-find-files-navigate-back)
+  (with-eval-after-load 'helm
+    (defun fu/helm-find-files-navigate-forward (orig-fun &rest args)
+      (if (file-directory-p (helm-get-selection))
+          (apply orig-fun args)
+        (helm-maybe-exit-minibuffer)))
+    (advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
+    (define-key helm-find-files-map (kbd "RET") 'fu/helm-find-files-navigate-forward)
+    (defun fu/helm-find-files-navigate-back (orig-fun &rest args)
+      (if (= (length helm-pattern) (length (helm-find-files-initial-input)))
+          (helm-find-files-up-one-level 1)
+        (apply orig-fun args)))
+    (advice-add 'helm-ff-delete-char-backward :around #'fu/helm-find-files-navigate-back)
+  )
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
