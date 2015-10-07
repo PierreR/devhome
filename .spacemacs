@@ -27,11 +27,14 @@ values."
      auto-completion
      ;; better-defaults
      dash
+     dockerfile
      emacs-lisp
+     ;; eyebrowse <- a window manager
+     ;; erc <- IRC client
      extra-langs
      git
      markdown
-     haskell
+     (haskell :variables haskell-enable-ghci-ng-support t)
      org
      (shell :variables
             shell-default-term-shell "/bin/zsh"
@@ -39,9 +42,12 @@ values."
             shell-default-position 'bottom)
      ;; spell-checking
      salt
+     ;; semantic <- no haskell support
      syntax-checking
+     spell-checking
      puppet
      version-control
+     yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -127,7 +133,7 @@ values."
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
-   dotspacemacs-use-ido nil
+   dotspacemacs-use-ido t
    ;; If non nil, `helm' will try to miminimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
@@ -209,6 +215,8 @@ layers configuration. You are free to put any user code."
 
   (add-to-list 'exec-path "~/bin/")
   (add-to-list 'exec-path "~/.local/bin/")
+  ;; this is needed by magit to open external tool such as p4merge
+  (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
 
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
@@ -218,7 +226,13 @@ layers configuration. You are free to put any user code."
         helm-ag-insert-at-point 'symbol
         haskell-compile-cabal-build-command "cd %s && stack build"
         haskell-process-type 'stack-ghci
+        haskell-interactive-popup-errors nil
+        haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans" "--with-ghc=ghci-ng")
         haskell-process-path-ghci "stack"
+        ;; make flycheck only occur after a save only
+        ;; otherwise it is slowing things down too much
+        flycheck-check-syntax-automatically '(mode-enabled save)
+        tramp-default-method "ssh"
   )
 
   ;; always delete trailing space automatically on save
@@ -230,7 +244,7 @@ layers configuration. You are free to put any user code."
   (eval-after-load 'haskell-mode
     '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
   (evil-leader/set-key-for-mode 'haskell-mode "mt" 'ghc-show-type)
-  (evil-leader/set-key-for-mode 'haskell-mode "mi" 'ghc-show-type)
+  (evil-leader/set-key-for-mode 'haskell-mode "mi" 'ghc-show-info)
 
   ;; In haskell, `o` and `O` would automatically insert an indent
   ;; This is to prevent it
@@ -264,19 +278,33 @@ layers configuration. You are free to put any user code."
 
   ;; Helm-find-file can open a new window with `c-c o`
   ;; Tweak it so that it behaves like `ido`
-  (with-eval-after-load 'helm
-    (defun fu/helm-find-files-navigate-forward (orig-fun &rest args)
-      (if (file-directory-p (helm-get-selection))
-          (apply orig-fun args)
-        (helm-maybe-exit-minibuffer)))
-    (advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
-    (define-key helm-find-files-map (kbd "RET") 'fu/helm-find-files-navigate-forward)
-    (defun fu/helm-find-files-navigate-back (orig-fun &rest args)
-      (if (= (length helm-pattern) (length (helm-find-files-initial-input)))
-          (helm-find-files-up-one-level 1)
-        (apply orig-fun args)))
-    (advice-add 'helm-ff-delete-char-backward :around #'fu/helm-find-files-navigate-back)
-  )
+  ;; (with-eval-after-load 'helm
+    ;; (defun uf/helm-find-files-navigate-forward (orig-fun &rest args)
+    ;;   (if (file-directory-p (helm-get-selection))
+    ;;       (apply orig-fun args)
+    ;;     (helm-maybe-exit-minibuffer)))
+  ;;   (advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
+    ;; (define-key helm-find-files-map (kbd "RET") 'helm-execute-persistent-action)
+    ;; (define-key helm-find-files-map (kbd "RET") 'uf/helm-find-files-navigate-forward)
+  ;;   (defun uf/helm-find-files-navigate-back (orig-fun &rest args)
+  ;;     (if (= (length helm-pattern) (length (helm-find-files-initial-input)))
+  ;;         (helm-find-files-up-one-level 1)
+  ;;       (apply orig-fun args)))
+  ;;   (advice-add 'helm-ff-delete-char-backward :around #'uf/helm-find-files-navigate-back)
+  ;; )
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(tramp-default-proxies-alist (quote (("saltmaster" "root" "/ssh:saltmaster_testing:")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
