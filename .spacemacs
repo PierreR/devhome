@@ -26,26 +26,29 @@ values."
      asciidoc
      auto-completion
      ;; better-defaults
+     emacs-lisp
      dash
      dockerfile
      emacs-lisp
-     ;; eyebrowse <- a window manager
-     ;; erc <- IRC client
      extra-langs
      git
      markdown
-     (haskell :variables haskell-enable-ghci-ng-support t)
+     (haskell :variables
+              haskell-enable-ghci-ng-support t
+              haskell-enable-ghc-mod-support t
+     )
      org
      (shell :variables
             shell-default-term-shell "/bin/zsh"
             shell-default-height 30
-            shell-default-position 'bottom)
-     ;; spell-checking
+            shell-default-position 'bottom
+     )
      salt
      ;; semantic <- no haskell support
      syntax-checking
      spell-checking
      puppet
+     python
      version-control
      yaml
      )
@@ -98,7 +101,7 @@ values."
                          leuven
                          monokai
                          zenburn)
-   ;; If non nil the cursor color matches the state color.
+   ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
@@ -183,7 +186,7 @@ values."
    dotspacemacs-smooth-scrolling t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -205,25 +208,24 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
-  (add-to-list `load-path "~/projects/ghc-mod/elisp")
   )
+
+
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-
   (add-to-list 'exec-path "~/bin/")
   (add-to-list 'exec-path "~/.local/bin/")
-  ;; this is needed by magit to open external tool such as p4merge
   (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
 
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
-        dash-helm-dash-docset-path "~/.docsets/cabal"
-        ghc-ghc-options '("-fno-warn-missing-signatures")
         vc-follow-symlinks t
-        helm-ag-insert-at-point 'symbol
+        tramp-default-method "ssh"
+        ;; helm-ag-insert-at-point 'symbol
+        ghc-ghc-options '("-fno-warn-missing-signatures")
         haskell-compile-cabal-build-command "cd %s && stack build"
         haskell-process-type 'stack-ghci
         haskell-interactive-popup-errors nil
@@ -232,8 +234,7 @@ layers configuration. You are free to put any user code."
         ;; make flycheck only occur after a save only
         ;; otherwise it is slowing things down too much
         flycheck-check-syntax-automatically '(mode-enabled save)
-        tramp-default-method "ssh"
-  )
+        )
 
   ;; always delete trailing space automatically on save
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -241,8 +242,7 @@ layers configuration. You are free to put any user code."
   (global-auto-revert-mode t)
 
   ;; Specific mappings
-  (eval-after-load 'haskell-mode
-    '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
+  (global-set-key [f5] 'browse-url-of-buffer)
   (evil-leader/set-key-for-mode 'haskell-mode "mt" 'ghc-show-type)
   (evil-leader/set-key-for-mode 'haskell-mode "mi" 'ghc-show-info)
 
@@ -276,35 +276,11 @@ layers configuration. You are free to put any user code."
       )
   )
 
-  ;; Helm-find-file can open a new window with `c-c o`
-  ;; Tweak it so that it behaves like `ido`
-  ;; (with-eval-after-load 'helm
-    ;; (defun uf/helm-find-files-navigate-forward (orig-fun &rest args)
-    ;;   (if (file-directory-p (helm-get-selection))
-    ;;       (apply orig-fun args)
-    ;;     (helm-maybe-exit-minibuffer)))
-  ;;   (advice-add 'helm-execute-persistent-action :around #'fu/helm-find-files-navigate-forward)
-    ;; (define-key helm-find-files-map (kbd "RET") 'helm-execute-persistent-action)
-    ;; (define-key helm-find-files-map (kbd "RET") 'uf/helm-find-files-navigate-forward)
-  ;;   (defun uf/helm-find-files-navigate-back (orig-fun &rest args)
-  ;;     (if (= (length helm-pattern) (length (helm-find-files-initial-input)))
-  ;;         (helm-find-files-up-one-level 1)
-  ;;       (apply orig-fun args)))
-  ;;   (advice-add 'helm-ff-delete-char-backward :around #'uf/helm-find-files-navigate-back)
-  ;; )
+  (add-hook 'haskell-interactive-mode-hook
+            (lambda ()
+              (setq-local evil-move-cursor-back nil)))
+
 )
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(tramp-default-proxies-alist (quote (("saltmaster" "root" "/ssh:saltmaster_testing:")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
