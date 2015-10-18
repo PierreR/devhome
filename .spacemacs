@@ -216,12 +216,15 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
   (add-to-list 'exec-path "~/bin/")
   (add-to-list 'exec-path "~/.local/bin/")
+  ;; I don't know why but this is need for ghci-ng or to open other external tool such as p4merge
   (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
 
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
+        dash-helm-dash-docset-path "~/.docsets/cabal"
         vc-follow-symlinks t
         tramp-default-method "ssh"
         ;; helm-ag-insert-at-point 'symbol
