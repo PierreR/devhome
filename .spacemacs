@@ -27,15 +27,19 @@ values."
      auto-completion
      ;; better-defaults
      emacs-lisp
+     erc
+     ;; eyebrowse
      dash
      dockerfile
      emacs-lisp
+     emoji
+     ;; evil-snipe
      extra-langs
      git
      markdown
      (haskell :variables
-              haskell-enable-ghci-ng-support t
-              haskell-enable-ghc-mod-support t
+              ;; haskell-enable-ghci-ng-support t
+              ;; haskell-enable-ghc-mod-support nil
      )
      org
      (shell :variables
@@ -44,7 +48,8 @@ values."
             shell-default-position 'bottom
      )
      salt
-     ;; semantic <- no haskell support
+     ;; no haskell support in semantic
+     ;; semantic
      syntax-checking
      spell-checking
      puppet
@@ -55,7 +60,7 @@ values."
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
-   ;; configuration in `dotspacemacs/config'.
+   ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -128,11 +133,21 @@ values."
    dotspacemacs-command-key ":"
    ;; If non nil `Y' is remapped to `y$'. (default t)
    dotspacemacs-remap-Y-to-y$ t
+   ;; Name of the default layout (default "Default")
+   dotspacemacs-default-layout-name "Default"
+   ;; If non nil the default layout name is displayed in the mode-line.
+   ;; (default nil)
+   dotspacemacs-display-default-layout nil
+   ;; If non nil then the last auto saved layouts are resume automatically upon
+   ;; start. (default nil)
+   dotspacemacs-auto-resume-layouts nil
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
    ;; (default 'cache)
    dotspacemacs-auto-save-file-location 'cache
+   ;; Maximum number of rollback slots to keep in the cache. (default 5)
+   dotspacemacs-max-rollback-slots 5
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
@@ -179,14 +194,18 @@ values."
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
+   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
+   ;; derivatives. If set to `relative', also turns on relative line numbers.
+   ;; (default nil)
+   dotspacemacs-line-numbers nil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode t
+   dotspacemacs-smartparens-strict-mode nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -202,6 +221,10 @@ values."
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil
+   ;; Delete whitespace while saving buffer. Possible values are `all',
+   ;; `trailing', `changed' or `nil'. Default is `changed' (cleanup whitespace
+   ;; on changed lines) (default 'changed)
+   dotspacemacs-whitespace-cleanup 'changed
    ))
 
 (defun dotspacemacs/user-init ()
@@ -210,35 +233,36 @@ It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
   )
 
-
-
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
- This function is called at the very end of Spacemacs initialization after
+This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
-  (add-to-list 'exec-path "~/bin/")
-  (add-to-list 'exec-path "~/.local/bin/")
-  ;; I don't know why but this is need for ghci-ng or to open other external tool such as p4merge
-  (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
+  ;; Apparently this is only needed if you use the specific zsh syntax PATH+= instead of the traditional export
+  ;; (add-to-list 'exec-path "~/bin/")
+  ;; (add-to-list 'exec-path "~/.local/bin/")
+  ;; ;; I don't know why but this is needed for ghci-ng or to open other external tool such as p4merge
+  ;; (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
 
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chromium"
         dash-helm-dash-docset-path "~/.docsets/cabal"
         vc-follow-symlinks t
         tramp-default-method "ssh"
-        ;; helm-ag-insert-at-point 'symbol
+        helm-ag-insert-at-point 'symbol
         ghc-ghc-options '("-fno-warn-missing-signatures")
-        haskell-compile-cabal-build-command "cd %s && stack build"
+        haskell-compile-cabal-build-command "stack build"
         haskell-process-type 'stack-ghci
-        haskell-interactive-popup-errors nil
-        haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans" "--with-ghc=ghci-ng")
         haskell-process-path-ghci "stack"
+        ;; haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans")
+        haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans" "--with-ghc=ghci-ng")
         ;; make flycheck only occur after a save only
         ;; otherwise it is slowing things down too much
-        flycheck-check-syntax-automatically '(mode-enabled save)
+        flycheck-check-syntax-automatically '(save mode-enabled)
+        erc-prompt-for-nickserv-password nil
+        powerline-default-separator 'alternate
+        helm-make-list-target-method 'qp
         )
-
   ;; always delete trailing space automatically on save
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   ;; automatic file reloading if it changes externally
@@ -249,11 +273,12 @@ layers configuration. You are free to put any user code."
   (evil-leader/set-key-for-mode 'haskell-mode "mt" 'ghc-show-type)
   (evil-leader/set-key-for-mode 'haskell-mode "mi" 'ghc-show-info)
 
+
+
   ;; In haskell, `o` and `O` would automatically insert an indent
   ;; This is to prevent it
   ;; This is actually a bug that should be solved by haskell-mode
   ;; https://github.com/haskell/haskell-mode/issues/896
-  (add-hook 'haskell-mode-hook 'redef-evil-open-below)
   (defun redef-evil-open-below ()
     (defun evil-open-below (count)
       "Insert a new line below point and switch to Insert state.
@@ -279,11 +304,50 @@ layers configuration. You are free to put any user code."
       )
   )
 
+  (defun haskell-indentation-unindent-or-delete-backwards ()
+    (interactive)
+    (defun haskell-indentation-at-beginning-of-line ()
+      (and
+       (not (= (current-column) 0))
+       (= (haskell-indentation-current-indentation) (current-column))))
+    (if (haskell-indentation-at-beginning-of-line)
+        (haskell-indentation-indent-backwards)
+      (backward-delete-char 1)))
+
+  (defun my-haskell-hook ()
+    (redef-evil-open-below)
+    (define-key haskell-mode-map (kbd "<backspace>") 'haskell-indentation-unindent-or-delete-backwards)
+    (haskell-decl-scan-mode)
+    (haskell-auto-insert-module-template))
+
+  (add-hook 'haskell-mode-hook 'my-haskell-hook)
+
   (add-hook 'haskell-interactive-mode-hook
             (lambda ()
               (setq-local evil-move-cursor-back nil)))
+
+  (defun magit-commit-single-file (file)
+    (interactive (or buffer-file-name
+                     (expand-file-name
+                      (read-file-name "Commit file: " nil nil t))))
+    (setq file (magit-file-relative-name file))
+    (magit-stage-file file)
+    (magit-commit "--" file))
 
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-make-build-dir ""))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
