@@ -1,105 +1,95 @@
-# setup a nice prompt
-source ~/.zsh_prompt
-# autoload -U colors && colors
-autoload -U compinit
-compinit
-# End of lines added by compinstall
-# Lines configured by zsh-newuser-install
+# Path to your oh-my-zsh installation.
+ZSH=/usr/share/oh-my-zsh/
 
-HISTFILE=~/.histfile
-HISTSIZE=2000
-SAVEHIST=2000
-setopt histignoredups
-setopt histignorealldups
-setopt hist_ignore_space
-setopt autocd
-setopt histverify
-bindkey -e
-# Use gvim exclusively
-# alias vim='gvim --remote-silent'
-# alias vim='vim --servername VIM'
-alias xclip='xclip -selection c'
-alias cabaldeps='cabal install --only-dependencies -j'
-alias salt='sudo salt'
-alias view='vim -R'
-alias ls='ls --color=auto'
-alias la='ls -lah'
-alias du='du -h'
-alias lfile="ls -lah *(.)"
-alias ldir="ls -ladh (\.*|*)(/,@)"
-alias df=" df -h"
-alias ag="ag --color-line-number=2"
-#alias hoogle="hoogle --color"
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+# ZSH_THEME="robbyrussell"
+# ZSH_THEME="bullet-train"
+ZSH_THEME="lambda-mod"
 
-alias install="yaourt"
-alias __reload_zsh='source ~/.zshrc'
-alias __reflector=' sudo reflector --verbose -l 6 --sort rate --save /etc/pacman.d/mirrorlist'
-alias __mount_shared='sudo mount -t vboxsf shared /media/sf_shared'
-alias __mount_usb='sudo mount /dev/sdb /mnt/usb'
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-alias dim='light -U 10'
-alias bright='light -A 10'
-alias reboot="sudo systemctl reboot"
-alias shutdown="sudo systemctl poweroff"
-alias suspend="sudo systemctl suspend"
-alias lock="slock"
-#cdpath+=(~/projects/cicd)
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-function sshi () {
-	ssh -A -i ~/.ssh/alhazen_rsa alhazen@$1
-}
+# Uncomment the following line to disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
 
-function ssrc () {
-	git rev-list --all | GIT_PAGER=less xargs git grep $1
-}
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
 
-function docker_ssh () {
-	ssh -p $1 root@localhost
-}
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-function swift_pra () {
-    swift -A https://s.irisnet.be/auth/v1.0 -U techops:pradermecker -K c221930ce937c9d upload pra $1
-}
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-function presources () {
-    puppetresources -p . -o $1 --hiera ./tests/hiera.yaml --facts-override tests/facts-global.yaml --pdbfile tests/facts.yaml  --ignoremodules java ${@:3}
-}
+# Uncomment the following line to enable command auto-correction.
+ENABLE_CORRECTION="true"
 
-# set dual monitors
-function setresol () {
-    xrandr  --output DisplayPort-2 --mode 1920x1080 -r 60
-}
-function dual () {
-    xrandr --output DisplayPort-2 --mode 1920x1080 --rate 60 --primary --right-of LVDS --output LVDS --auto
-}
-function laptop () {
-    --xrandr --output DisplayPort-2 --off --output LVDS --auto
-    xrandr --output VGA-0 --off --output LVDS --auto
-}
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
 
-# set single monitor
-function single () {
-    #xrandr --output DisplayPort-2 --mode 1920x1080 --rate 60 --output LVDS --off
-    xrandr --output VGA-0 --mode 1920x1080 --rate 60 --output LVDS --off
-}
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-function cabal-recreate () {
-    cabal clean
-    cabal sandbox delete
-    cabal sandbox init
-    cabal configure
-    cabal install --only-dependencies -j
-    cabal build -j
-}
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
 
-alias sshi_puppetmaster_dev=' sshi 192.168.30.123'
-alias sshi_puppetmaster_staging=' sshi 192.168.30.105'
-alias sshi_puppetmaster_prod=' sshi puppet2.prd.srv.cirb.lan'
-alias sshi_jenkinsmaster_staging=' sshi 192.168.30.118'
-alias sshi_jenkinsmaster_prod=' sshi jenkins2.prd.srv.cirb.lan'
-alias sshi_jenkinsslave_staging=' sshi 192.168.30.140'
-alias sshi_jenkinsslave_prod=' sshi SVAPPCAVL555.prd.srv.cirb.lan'
-alias sshi_dockerregistry_prod=' sshi SVAPPCAVL248.prd.srv.cirb.lan'
-source /etc/profile.d/autojump.zsh
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM=~/zsh_custom
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git autojump docker history)
+
+# User configuration
+
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# export MANPATH="/usr/local/man:$MANPATH"
+
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+ZSH_CACHE_DIR=$HOME/.oh-my-zsh-cache
+if [[ ! -d $ZSH_CACHE_DIR ]]; then
+  mkdir $ZSH_CACHE_DIR
+fi
+
+source $ZSH/oh-my-zsh.sh
