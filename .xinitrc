@@ -14,24 +14,21 @@ fi
 # Launch emacs as a deamon
 # cd $HOME; emacs --daemon &
 
+# set wallpaper
+sh ~/.fehbg &
+
 # set the cursor
 xsetroot -cursor_name left_ptr
 
 # set keyboard layout
 setxkbmap -layout be
-setxkbmap -option "caps:escape"
-
+if [ -s ~/.Xmodmap ]; then
+    xmodmap ~/.Xmodmap
+fi
 # enable VBox addition (need sudo here at least in current version)
 VBoxClient-all &
-
-# emacs daemon
-#/usr/bin/emacs --daemon
-
-# set wallpaper
-sh ~/.fehbg &
 
 # xmodmap ~/.Xmodmap
 # xset b off
 exec xmonad
-#exec startxfce4
 # exec spectrwm
