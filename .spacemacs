@@ -78,6 +78,18 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
+   ;; possible. Set it to nil if you have no way to use HTTPS in your
+   ;; environment, otherwise it is strongly recommended to let it set to t.
+   ;; This variable has no effect if Emacs is launched with the parameter
+   ;; `--insecure' which forces the value of this variable to nil.
+   ;; (default t)
+   dotspacemacs-elpa-https t
+   ;; Maximum allowed time in seconds to contact an ELPA repository.
+   dotspacemacs-elpa-timeout 5
+   ;; If non nil then spacemacs will check for updates at startup
+   ;; when the current branch is not `develop'. (default t)
+   dotspacemacs-check-for-update t
    ;; One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
@@ -126,6 +138,14 @@ values."
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m)
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; These variables control whether separate commands are bound in the GUI to
+   ;; the key pairs C-i, TAB and C-m, RET.
+   ;; Setting it to a non-nil value, allows for separate commands under <C-i>
+   ;; and TAB or <C-m> and RET.
+   ;; In the terminal, these pairs are generally indistinguishable, so this only
+   ;; works in the GUI. (default nil)
+   dotspacemacs-distinguish-gui-tab nil
+   ;; (Not implemented) dotspacemacs-distinguish-gui-ret nil
    ;; The command key used for Evil commands (ex-commands) and
    ;; Emacs commands (M-x).
    ;; By default the command key is `:' so ex-commands are executed like in Vim
@@ -231,7 +251,9 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
-  )
+  (add-to-list `load-path "~/projects/ghc-mod/elisp")
+  (setq exec-path-from-shell-check-startup-files nil)
+)
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -240,18 +262,19 @@ layers configuration. You are free to put any user code."
 
   ;; Apparently this is only needed if you use the specific zsh syntax PATH+= instead of the traditional export
   ;; (add-to-list 'exec-path "~/bin/")
-  ;; (add-to-list 'exec-path "~/.local/bin/")
+  (add-to-list 'exec-path "~/.local/bin/")
   ;; ;; I don't know why but this is needed for ghci-ng or to open other external tool such as p4merge
-  ;; (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
-
+  (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
   (setq browse-url-browser-function 'browse-url-generic
+        evil-toggle-key "C-µ"
         browse-url-generic-program "chromium"
         dash-helm-dash-docset-path "~/.docsets/cabal"
         vc-follow-symlinks t
+        org-bullets-bullet-list '("■" "◆" "▲" "▶")
+        auto-revert-check-vc-info t
         tramp-default-method "ssh"
-        helm-ag-insert-at-point 'symbol
         ghc-ghc-options '("-fno-warn-missing-signatures")
-        haskell-compile-cabal-build-command "stack build"
+        haskell-compile-cabal-build-command "stack build --fast"
         haskell-process-type 'stack-ghci
         haskell-process-path-ghci "stack"
         ;; haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans")
@@ -267,13 +290,15 @@ layers configuration. You are free to put any user code."
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
   ;; automatic file reloading if it changes externally
   (global-auto-revert-mode t)
-
   ;; Specific mappings
   (global-set-key [f5] 'browse-url-of-buffer)
-  (evil-leader/set-key-for-mode 'haskell-mode "mt" 'ghc-show-type)
-  (evil-leader/set-key-for-mode 'haskell-mode "mi" 'ghc-show-info)
-
-
+  (global-set-key (kbd "C-s") 'evil-write-all)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "t" 'ghc-show-type)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "i" 'ghc-show-info)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "gp" 'beginning-of-defun)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "gn" 'end-of-defun)
+  ;; (evil-leader/set-key-for-mode 'haskell-mode "mt" 'ghc-show-type)
+  ;; (evil-leader/set-key-for-mode 'haskell-mode "mi" 'ghc-show-info)
 
   ;; In haskell, `o` and `O` would automatically insert an indent
   ;; This is to prevent it
@@ -315,9 +340,11 @@ layers configuration. You are free to put any user code."
       (backward-delete-char 1)))
 
   (defun my-haskell-hook ()
+    (add-to-list 'sp-no-reindent-after-kill-modes 'haskell-mode)
     (redef-evil-open-below)
     (define-key haskell-mode-map (kbd "<backspace>") 'haskell-indentation-unindent-or-delete-backwards)
     (haskell-decl-scan-mode)
+    (setq flycheck-set-checker-executable 'haskell-hlint)
     (haskell-auto-insert-module-template))
 
   (add-hook 'haskell-mode-hook 'my-haskell-hook)
@@ -334,8 +361,9 @@ layers configuration. You are free to put any user code."
     (magit-stage-file file)
     (magit-commit "--" file))
 
-)
+  (spacemacs/toggle-golden-ratio-on)
 
+)
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
@@ -343,11 +371,16 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(helm-make-build-dir ""))
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(helm-make-build-dir "")
+ '(menu-bar-mode nil)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Source Code Pro" :foundry "adobe" :slant normal :weight normal :height 93 :width normal))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
