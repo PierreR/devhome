@@ -70,7 +70,7 @@
   # Enable CUPS to print documents.
   # services.printing.enable = true;
   # services.xserver.xkbOptions = "eurosign:e";
-  services.virtualboxGuest.enable = true;
+  virtualisation.virtualbox.guest.enable = true;
 
   # Enable the X11 windowing system.
   services.xserver = {
