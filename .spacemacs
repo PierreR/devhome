@@ -18,48 +18,37 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
      asciidoc
      auto-completion
      ;; better-defaults
-     emacs-lisp
-     erc
-     ;; eyebrowse
      dash
      dockerfile
      emacs-lisp
-     emoji
-     ;; evil-snipe
-     extra-langs
+     erc
      git
-     markdown
      (haskell :variables
               ;; haskell-enable-ghci-ng-support t
               ;; haskell-enable-ghc-mod-support nil
-     )
+              )
+     markdown
+     nixos
      org
-     (shell :variables
-            shell-default-term-shell "/bin/zsh"
-            shell-default-height 30
-            shell-default-position 'bottom
-     )
-     salt
-     ;; no haskell support in semantic
-     ;; semantic
-     syntax-checking
-     spell-checking
      puppet
      python
+     (shell :variables
+            shell-default-term-shell "/run/current-system/sw/bin/zsh";
+            shell-default-height 30
+            shell-default-position 'bottom)
+     salt
+     ;; semantic
+     spell-checking
+     syntax-checking
      version-control
      yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
-   ;; packages then consider to create a layer, you can also put the
+   ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -108,6 +97,11 @@ values."
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
    dotspacemacs-startup-lists '(recents projects)
+   ;; Number of recent files to show in the startup buffer. Ignored if
+   ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
+   dotspacemacs-startup-recent-list-size 5
+   ;; Default major mode of the scratch buffer (default `text-mode')
+   dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -172,7 +166,7 @@ values."
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
    dotspacemacs-use-ido t
-   ;; If non nil, `helm' will try to miminimize the space it uses. (default nil)
+   ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
@@ -241,36 +235,38 @@ values."
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil
-   ;; Delete whitespace while saving buffer. Possible values are `all',
-   ;; `trailing', `changed' or `nil'. Default is `changed' (cleanup whitespace
-   ;; on changed lines) (default 'changed)
-   dotspacemacs-whitespace-cleanup 'changed
+   ;; Delete whitespace while saving buffer. Possible values are `all'
+   ;; to aggressively delete empty line and long sequences of whitespace,
+   ;; `trailing' to delete only the whitespace at end of lines, `changed'to
+   ;; delete only whitespace for changed lines or `nil' to disable cleanup.
+   ;; (default nil)
+   dotspacemacs-whitespace-cleanup nil
    ))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
-It is called immediately after `dotspacemacs/init'.  You are free to put any
-user code."
-  (add-to-list `load-path "~/projects/ghc-mod/elisp")
-  (setq exec-path-from-shell-check-startup-files nil)
-)
+It is called immediately after `dotspacemacs/init', before layer configuration
+executes.
+ This function is mostly useful for variables that need to be set
+before packages are loaded. If you are unsure, you should try in setting them in
+`dotspacemacs/user-config' first."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
-layers configuration. You are free to put any user code."
+layers configuration.
+This is the place where most of your configurations should be done. Unless it is
+explicitly specified that a variable should be set before a package is loaded,
+you should place you code here."
 
-  ;; Apparently this is only needed if you use the specific zsh syntax PATH+= instead of the traditional export
-  ;; (add-to-list 'exec-path "~/bin/")
-  (add-to-list 'exec-path "~/.local/bin/")
-  ;; ;; I don't know why but this is needed for ghci-ng or to open other external tool such as p4merge
-  (setenv "PATH" (concat "/home/vagrant/bin:/home/vagrant/.local/bin:" (getenv "PATH")))
   (setq browse-url-browser-function 'browse-url-generic
         evil-toggle-key "C-µ"
         browse-url-generic-program "chromium"
         dash-helm-dash-docset-path "~/.docsets/cabal"
         vc-follow-symlinks t
         org-bullets-bullet-list '("■" "◆" "▲" "▶")
+        org-agenda-files (list "~/projects/cicd")
         auto-revert-check-vc-info t
         tramp-default-method "ssh"
         ghc-ghc-options '("-fno-warn-missing-signatures")

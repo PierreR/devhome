@@ -234,7 +234,7 @@ main = do
 
 myConfig  = defaultConfig {
   -- simple stuff
-  terminal           = "lxterminal",
+  terminal           = "xfce4-terminal",
   focusFollowsMouse  = False,
   borderWidth        = 1,
   modMask            = mod4Mask,
