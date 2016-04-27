@@ -48,6 +48,7 @@
     gnumake
     haskellPackages.xmobar
     haskellPackages.hasktags
+    haskellPackages.ShellCheck
     haskellPackages.ghc-mod
     haskellPackages.stylish-haskell
     haskellPackages.pandoc
@@ -55,12 +56,14 @@
     nix-prefetch-scripts
     nix-repl
     postgresql
+    python
     ruby
     rxvt_unicode
     silver-searcher
     unzip
     vim
     wget
+    which
     xlibs.xset
     xfce.terminal
     zip
@@ -140,7 +143,7 @@
   fileSystems."/vbox/notebook" = {
      fsType = "vboxsf";
      device = "notebook";
-     # options = "rw";
+     options = [ "rw" ];
   };
 
   programs.ssh.startAgent = true;
