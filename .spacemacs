@@ -32,6 +32,7 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     html
      asciidoc
      auto-completion
      ;; ----------------------------------------------------------------
@@ -102,7 +103,7 @@ values."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https t
+   dotspacemacs-elpa-https nil
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
@@ -302,7 +303,7 @@ you should place you code here."
   (setq browse-url-browser-function 'browse-url-generic
         evil-toggle-key "C-µ"
         auto-save-interval 50
-        auto-save-timeout 3
+        auto-save-timeout 2
         browse-url-generic-program "firefox"
         dash-helm-dash-docset-path "~/.docsets/cabal"
         vc-follow-symlinks t
@@ -324,7 +325,7 @@ you should place you code here."
         auto-revert-check-vc-info t
         tramp-default-method "ssh"
         ghc-ghc-options '("-fno-warn-missing-signatures")
-        haskell-compile-cabal-build-command "stack build --fast"
+        haskell-compile-cabal-build-command "stack build --nix --fast"
         haskell-process-type 'stack-ghci
         haskell-process-path-ghci "stack"
         ;; haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans")
@@ -354,6 +355,7 @@ you should place you code here."
      '(("frame" "lines") ("linenos=true")))
   ;; always delete trailing space automatically on save
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (spacemacs/add-flycheck-hook 'sh-mode) 
   ;; automatic file reloading if it changes externally
   (global-auto-revert-mode t)
   ;; Specific mappings
@@ -366,7 +368,10 @@ you should place you code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "i" 'ghc-show-info)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "gp" 'beginning-of-defun)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "gn" 'end-of-defun)
-  ;; (use-package ox-asciidoc)
+  (add-hook 'nixos-mode-hook (lambda () (seq tab-width 2)))
+  ;; (spacemacs|use-package-add-hook nixos
+  ;;   :post-config (setq tab-width 2))
+
   (with-eval-after-load 'org
     (add-to-list 'org-latex-packages-alist '("" "minted"))
     (add-to-list 'org-latex-classes
