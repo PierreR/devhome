@@ -38,6 +38,7 @@
     aspellDicts.en
     aspellDicts.fr
     autojump
+    bundix
     cabal2nix
     emacs
     docker
@@ -46,6 +47,7 @@
     gitFull
     gnupg
     gnumake
+    ghc
     haskellPackages.xmobar
     haskellPackages.hasktags
     haskellPackages.ShellCheck
@@ -55,18 +57,22 @@
     htop
     nix-prefetch-scripts
     nix-repl
+    parallel
     postgresql
     python
     ruby
     rxvt_unicode
+    stack
     silver-searcher
     unzip
-    vim
+    neovim
     wget
     which
     xlibs.xset
     xfce.terminal
+    zeal
     zip
+    zlib
   ];
 
   # List services that you want to enable:
@@ -85,9 +91,8 @@
     desktopManager.default = "none";
 
     displayManager = {
-      slim = {
+      lightdm = {
        	enable = true;
-       	defaultUser = "pierre";
       };
       sessionCommands = ''
         ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
@@ -169,4 +174,5 @@
     wantedBy = [ "default.target" ];
   };
   systemd.services.emacs.enable = true;
+
 }
