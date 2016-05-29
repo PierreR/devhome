@@ -62,7 +62,6 @@
     python
     ruby
     rxvt_unicode
-    stack
     silver-searcher
     unzip
     neovim
