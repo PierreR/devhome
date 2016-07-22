@@ -51,7 +51,6 @@
     haskellPackages.xmobar
     haskellPackages.hasktags
     haskellPackages.ShellCheck
-    haskellPackages.ghc-mod
     haskellPackages.stylish-haskell
     haskellPackages.pandoc
     htop
@@ -61,7 +60,6 @@
     postgresql
     python
     ruby
-    rxvt_unicode
     silver-searcher
     unzip
     neovim
