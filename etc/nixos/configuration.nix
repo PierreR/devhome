@@ -54,6 +54,7 @@
     python
     ruby
     silver-searcher
+    tree
     unzip
     wget
     which
@@ -106,6 +107,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   virtualisation.docker.enable = true;
+  virtualisation.docker.extraOptions = "--insecure-registry docker.cirb.lan --insecure-registry docker.sandbox.srv.cirb.lan";
   virtualisation.virtualbox.guest.enable = true;
 
   fileSystems."/vbox/shared" = {
