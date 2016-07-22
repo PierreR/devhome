@@ -16,14 +16,14 @@
   # Define on which hard drive you want to install Grub.
   boot.loader.grub.device = "/dev/sda";
 
-  networking.hostName = "prixos"; # Define your hostname.
+  networking.hostName = "nixos-1603"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   nixpkgs.config.allowUnfree = true;
 
   # Select internationalisation properties.
   i18n = {
-  #   consoleFont = "Lat2-Terminus16";
+    consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "be-latin1";
     defaultLocale = "en_US.UTF-8";
   };
@@ -37,39 +37,28 @@
     aspell
     aspellDicts.en
     aspellDicts.fr
-    autojump
     bundix
     cabal2nix
+    chromium
     emacs
     docker
-    feh
-    firefox
+    ghc
     gitFull
     gnupg
     gnumake
-    ghc
     haskellPackages.xmobar
-    haskellPackages.hasktags
     haskellPackages.ShellCheck
-    haskellPackages.stylish-haskell
-    haskellPackages.pandoc
     htop
-    nix-prefetch-scripts
-    nix-repl
+    neovim
     parallel
-    postgresql
     python
     ruby
     silver-searcher
     unzip
-    neovim
     wget
     which
-    xlibs.xset
     xfce.terminal
-    zeal
     zip
-    zlib
   ];
 
   # List services that you want to enable:
@@ -79,67 +68,50 @@
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
-  # Enable the X11 windowing system.
+
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
     layout = "be";
-    desktopManager.xterm.enable = false;
-    desktopManager.default = "none";
-
-    displayManager = {
-      lightdm = {
-       	enable = true;
-      };
-      sessionCommands = ''
-        ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        sh /home/pierre/.fehbg
-      '';
-    };
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.default = "xmonad";
     xkbOptions = "caps:escape";
+    displayManager = {
+      sessionCommands = ''
+        ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
+        sh $HOME/.fehbg
+      '';
+    };
   };
   # services.xserver.xkbOptions = "eurosign:e";
 
-  # Enable the KDE Desktop Environment.
-  services.xserver.displayManager.kdm.enable = false;
-  services.xserver.desktopManager.kde4.enable = false;
-
-  # fonts
   fonts = {
-    enableCoreFonts = true;
+ #   enableCoreFonts = true;
     enableFontDir = true;
-    enableGhostscriptFonts = false;
-    fonts = with pkgs; [
-      source-code-pro
-    ];
-  };
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.extraUsers.pierre = {
-     createHome = true;
-     home = "/home/pierre";
-     description = "Pierre Radermecker";
-     isSystemUser = true;
-     extraGroups = [ "wheel" "disk" "vboxusers" "docker"];
-     shell = "/run/current-system/sw/bin/zsh";
-  #   uid = 1000;
+    fonts = [ pkgs.source-code-pro ];
   };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "15.09";
-  programs.zsh.enable = true;
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.extraUsers.nix = {
+    createHome = true;
+    home = "/home/nix";
+    isSystemUser = true;
+    extraGroups = [ "wheel" "disk" "vboxusers" "docker"];
+    shell = "/run/current-system/sw/bin/bash";
+    uid = 1000;
+  };
+
   programs.bash.enableCompletion = true;
   security.sudo.wheelNeedsPassword = false;
 
   virtualisation.docker.enable = true;
-  virtualisation.docker.extraOptions = "--insecure-registry docker.cirb.lan --insecure-registry docker.sandbox.srv.cirb.lan";
-  # mount shared virtualbox folder
+  virtualisation.virtualbox.guest.enable = true;
+
   fileSystems."/vbox/shared" = {
      fsType = "vboxsf";
      device = "shared";
-     # options = "rw";
+     options = [ "rw" ];
   };
 
   fileSystems."/vbox/notebook" = {
@@ -147,29 +119,8 @@
      device = "notebook";
      options = [ "rw" ];
   };
-
-  programs.ssh.startAgent = true;
-
-  systemd.user.services.emacs = {
-    description = "Emacs Daemon";
-    environment = {
-      GTK_DATA_PREFIX = config.system.path;
-      SSH_AUTH_SOCK = "%t/ssh-agent";
-      GTK_PATH = "${config.system.path}/lib/gtk-3.0:${config.system.path}/lib/gtk-2.0";
-      NIX_PROFILES = "${pkgs.lib.concatStringsSep " " config.environment.profiles}";
-      TERMINFO_DIRS = "/run/current-system/sw/share/terminfo";
-      ASPELL_CONF = "dict-dir /run/current-system/sw/lib/aspell";
-      NIX_USER_PROFILE_DIR = "/nix/var/nix/profiles/per-user/pierre";
-    };
-    serviceConfig = {
-       Type = "forking";
-       ExecStart = "${pkgs.zsh}/bin/zsh -c 'source ${config.system.build.setEnvironment}; exec emacs --daemon'";
-       # ExecStart = "${pkgs.emacs}/bin/emacs --daemon";
-       ExecStop = "${pkgs.emacs}/bin/emacsclient --eval (kill-emacs)";
-       Restart = "always";
-    };
-    wantedBy = [ "default.target" ];
-  };
-  systemd.services.emacs.enable = true;
+  
+  # The NixOS release to be compatible with for stateful data such as databases.
+  system.stateVersion = "16.03";
 
 }
