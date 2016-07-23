@@ -41,8 +41,8 @@
     bundix
     cabal2nix
     chromium
-    emacs
     docker
+    emacs
     ghc
     gitFull
     gnupg
@@ -52,6 +52,7 @@
     htop
     neovim
     parallel
+    pandoc
     python
     ruby
     silver-searcher
