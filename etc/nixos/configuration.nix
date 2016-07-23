@@ -37,6 +37,7 @@
     aspell
     aspellDicts.en
     aspellDicts.fr
+    autojump
     bundix
     cabal2nix
     chromium
