@@ -48,7 +48,6 @@
     gnupg
     gnumake
     haskellPackages.xmobar
-    haskellPackages.ShellCheck
     htop
     neovim
     parallel
@@ -56,6 +55,7 @@
     python
     ruby
     silver-searcher
+    shellcheck
     tree
     unzip
     wget
