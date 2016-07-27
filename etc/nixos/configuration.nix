@@ -48,15 +48,22 @@
     gnupg
     gnumake
     haskellPackages.xmobar
+    haskellPackages.ShellCheck
+    hiera-eyaml
     htop
+    jq
+    nix-repl
     neovim
     parallel
     pandoc
-    python
+    pythonFull
+    pythonPackages.pip
+    pythonPackages.ipython
+    pythonPackages.jedi
     ruby
     silver-searcher
-    shellcheck
     tree
+    vault
     unzip
     wget
     which
