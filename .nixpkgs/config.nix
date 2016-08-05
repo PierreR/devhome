@@ -1,15 +1,27 @@
+
 {
-  provideOldHaskellAttributeNames = true;
+    allowBroken = true;
+    allowUnfree = true;
 
-  packageOverrides = super: let self = super.pkgs; in
-  {
-    hsDevEnv = self.haskellngPackages.ghcWithPackages (p: with p; [
-      async attoparsec base16-bytestring bytestring case-insensitive containers
-      cryptohash Diff directory either exceptions filecache Glob
-      hashable hslogger hspec hlint HUnit lens lens-aeson luautils pcre-utils
-      mtl operational optparse-applicative parallel-io parsers regex-pcre-builtin
-      scientific servant servant-client strict-base-types stylish-haskell vector yaml
-    ]);
+    packageOverrides = super:
 
-  };
+      let self = super.pkgs;
+          asciidoctor = self.bundlerEnv rec {
+            name = "asciidoctor-${version}";
+            version = "1.5.4";
+
+            gemfile = ./Gemfile;
+            lockfile = ./Gemfile.lock;
+            gemset = ./gemset.nix;
+
+            # Delete dependencies' executables
+            postBuild = ''
+              find $out/bin -type f -not -wholename '*bin/asciidoctor*' -print0 \
+              | xargs -0 rm
+            '';
+          };
+      in
+      {
+      inherit asciidoctor;
+      };
 }
