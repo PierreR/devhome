@@ -26,7 +26,7 @@
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "be-latin1";
     defaultLocale = "en_US.UTF-8";
-  };
+  } ;
 
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
@@ -34,6 +34,7 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
+    asciidoctor
     aspell
     aspellDicts.en
     aspellDicts.fr
@@ -43,12 +44,15 @@
     chromium
     docker
     emacs
+    entr
     ghc
     gitFull
     gnupg
     gnumake
     haskellPackages.xmobar
-    haskellPackages.ShellCheck
+    haskellPackages.shake
+    haskellPackages.stack
+    haskellPackages.stylish-haskell
     hiera-eyaml
     htop
     jq
@@ -61,6 +65,7 @@
     pythonPackages.ipython
     pythonPackages.jedi
     ruby
+    shellcheck
     silver-searcher
     tree
     vault
@@ -130,7 +135,7 @@
      device = "notebook";
      options = [ "rw" ];
   };
-  
+
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.03";
 
