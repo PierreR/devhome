@@ -15,11 +15,19 @@
   boot.loader.grub.version = 2;
   # Define on which hard drive you want to install Grub.
   boot.loader.grub.device = "/dev/sda";
+  # within virtualbox only
+  boot.initrd.checkJournalingFS = false;
 
   networking.hostName = "nixos-1603"; # Define your hostname.
+  networking.enableIPv6 = false;
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   nixpkgs.config.allowUnfree = true;
+  # be a bit more developer friendly (don't collect built-time only deps)
+  nix.extraOptions = ''
+    gc-keep-outputs = true
+    gc-keep-derivations = true
+  '';
 
   # Select internationalisation properties.
   i18n = {
@@ -52,6 +60,7 @@
     haskellPackages.xmobar
     haskellPackages.shake
     haskellPackages.stack
+    haskellPackages.hlint
     haskellPackages.stylish-haskell
     hiera-eyaml
     htop
