@@ -82,6 +82,7 @@
     wget
     which
     xfce.terminal
+    zeal
     zip
   ];
 
@@ -102,6 +103,9 @@
     windowManager.default = "xmonad";
     xkbOptions = "caps:escape";
     displayManager = {
+      slim = {
+        defaultUser = "nix";
+      };
       sessionCommands = ''
         ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
         sh $HOME/.fehbg
