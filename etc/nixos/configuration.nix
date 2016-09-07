@@ -1,3 +1,4 @@
+# # Edit this configuration file to define what should be installed on
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
@@ -17,6 +18,7 @@
   boot.loader.grub.device = "/dev/sda";
   # within virtualbox only
   boot.initrd.checkJournalingFS = false;
+  boot.kernelPackages = pkgs.linuxPackages_4_6;
 
   networking.hostName = "nixos-1603"; # Define your hostname.
   networking.enableIPv6 = false;
@@ -102,13 +104,17 @@
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.default = "xmonad";
     xkbOptions = "caps:escape";
+    #desktopManager.xterm.enable = false;
+    desktopManager.default = "none";
     displayManager = {
-      slim = {
-        defaultUser = "nix";
+      lightdm = {
+        enable = true;
+        autoLogin.user= "nix";
+        autoLogin.enable= true;
       };
       sessionCommands = ''
         ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        sh $HOME/.fehbg
+        ${pkgs.feh}/bin/feh --bg-scale "$HOME/.wallpaper.jpg"
       '';
     };
   };
@@ -131,6 +137,35 @@
   };
 
   programs.bash.enableCompletion = true;
+  programs.bash.shellAliases = {
+    du = " du -h" ;
+    df = " df -h" ;
+    la = " ls -lah" ;
+    ag = "ag --color-line-number=2" ;
+    vim = "nvim" ;
+    build = "./build/build.sh" ;
+    see = "./bin/check_role.sh" ;
+  };
+  programs.bash.shellInit = ''
+    shopt -s autocd
+
+    function presources () {
+        puppetresources -p . -o "$1" --hiera ./tests/hiera.yaml --pdbfile tests/facts.yaml ''${@:2}
+    }
+
+    #. $(autojump-share)/autojump.bash
+  '';
+  programs.bash.promptInit = ''
+    # Provide a nice prompt if the terminal supports it.
+    if [ "$TERM" != "dumb" -o -n "$INSIDE_EMACS" ]; then
+      PROMPT_COLOR="1;31m"
+      let $UID && PROMPT_COLOR="1;32m"
+      PS1="\n\[\033[$PROMPT_COLOR\][\u@\h:\w]\\$\[\033[0m\] "
+      if test "$TERM" = "xterm"; then
+        export PS1='\w\[\033[01;38m\]''$(__git_ps1)\[\033[00m\] → '
+      fi
+    fi
+  '';
   security.sudo.wheelNeedsPassword = false;
 
   virtualisation.docker.enable = true;
