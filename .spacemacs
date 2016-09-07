@@ -28,65 +28,57 @@ values."
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
-   ;; List of configuration layers to load. If it is the symbol `all' instead
-   ;; of a list then all discovered layers will be installed.
+   ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     html
      asciidoc
-     auto-completion
+     yaml
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     spacemacs-helm
-     ;; auto-completion
+     docker
+     helm
+     html
+     auto-completion
      ;; better-defaults
-     dash
-     dockerfile
      emacs-lisp
      erc
+     puppet
+     ;; python
      git
      (haskell :variables
-              ;; haskell-enable-ghci-ng-support t
-              ;; haskell-enable-ghc-mod-support nil
-              )
-     markdown
+              haskell-completion-backend 'intero)
      nixos
-     (latex :variables
-            ;; latex-build-command "latexmk -e \"$pdflatex=q/xelatex -synctex=1 -interaction=nonstopmode/\" -pdf"
-            latex-enable-auto-fill t)
-     pandoc
-     (org :variables
-          org-enable-github-support t)
-     puppet
-     python
+     markdown
+     org
      ranger
      (shell :variables
-            shell-default-term-shell "/run/current-system/sw/bin/zsh";
             shell-default-height 30
             shell-default-position 'bottom)
      salt
-     ;; semantic
      spell-checking
      syntax-checking
      version-control
-     yaml
-     ;; pi3r
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   ;; dotspacemacs-additional-packages '((ox-asciidoc :location "~/.emacs.d/private/local/ox-asciidoc"))
-   dotspacemacs-additional-packages '((ox-asciidoc :location local))
-   ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
-   ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
-   ;; are declared in a layer which is not a member of
-   ;; the list `dotspacemacs-configuration-layers'. (default t)
-   dotspacemacs-delete-orphan-packages t))
+   dotspacemacs-additional-packages '()
+   ;; A list of packages that cannot be updated.
+   dotspacemacs-frozen-packages '()
+   ;; A list of packages that will not be install and loaded.
+   dotspacemacs-excluded-packages '(hl-todo)
+   ;; Defines the behaviour of Spacemacs when downloading packages.
+   ;; Possible values are `used', `used-but-keep-unused' and `all'. `used' will
+   ;; download only explicitly used packages and remove any unused packages as
+   ;; well as their dependencies. `used-but-keep-unused' will download only the
+   ;; used packages but won't delete them if they become unused. `all' will
+   ;; download all the packages regardless if they are used or not and packages
+   ;; won't be deleted by Spacemacs. (default is `used')
+   dotspacemacs-download-packages 'used))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -103,7 +95,7 @@ values."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https nil
+   dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
@@ -125,29 +117,23 @@ values."
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 'official
-   ;; List of items to show in the startup buffer. If nil it is disabled.
-   ;; Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.
-   ;; (default '(recents projects))
-   dotspacemacs-startup-lists '(recents projects)
-   ;; Number of recent files to show in the startup buffer. Ignored if
-   ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
-   dotspacemacs-startup-recent-list-size 5
+   ;; List of items to show in startup buffer or an association list of of
+   ;; the form `(list-type . list-size)`. If nil it is disabled.
+   ;; Possible values for list-type are:
+   ;; `recents' `bookmarks' `projects' `agenda' `todos'."
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-light
-                         spacemacs-dark
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         monokai
-                         zenburn)
+                         spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
-   ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
-   ;; size to make separators look not too crappy.
+   ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
+   ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 13
                                :weight normal
@@ -176,6 +162,12 @@ values."
    dotspacemacs-distinguish-gui-tab t
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
    dotspacemacs-remap-Y-to-y$ t
+   ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
+   ;; there. (default t)
+   dotspacemacs-retain-visual-state-on-shift t
+   ;; If non-nil, J and K move lines up and down when in visual mode.
+   ;; (default nil)
+   dotspacemacs-visual-line-move-text nil
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
@@ -186,7 +178,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -253,6 +245,9 @@ values."
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
    dotspacemacs-line-numbers nil
+   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; (default 'evil)
+   dotspacemacs-folding-method 'evil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -266,7 +261,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -298,113 +293,51 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
-you should place you code here."
-  ;; (defconst emacs-tmp-dir (format "%s%s%s/" temporary-file-directory "emacs" (user-uid)))
-  (setq browse-url-browser-function 'browse-url-generic
-        evil-toggle-key "C-µ"
-        auto-save-interval 50
-        auto-save-timeout 2
-        browse-url-generic-program "firefox"
-        dash-helm-dash-docset-path "~/.docsets/cabal"
-        vc-follow-symlinks t
-        ;; org-latex-pdf-process '("texi2dvi -p -b -c -V %f")
-        org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                                "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f")
-        latex-run-command "xelatex -shell-escape -interaction nonstopmode"
-        org-M-RET-may-split-line nil
-        org-bullets-bullet-list '("■" "◆" "▲" "▶")
-        org-agenda-files (list "~/projects/cicd")
-        org-src-fontify-natively t
-        org-blank-before-new-entry '((heading . nil) (plain-list-item . nil))
-        org-latex-listings 'minted
-        org-export-with-sub-superscripts nil
-        org-export-with-smart-quotes nil
-        org-export-with-author nil
-        org-export-with-toc nil
-        auto-revert-check-vc-info t
-        tramp-default-method "ssh"
-        ghc-ghc-options '("-fno-warn-missing-signatures")
-        haskell-compile-cabal-build-command "stack build --nix --fast"
-        haskell-process-type 'stack-ghci
-        haskell-process-path-ghci "stack"
-        ;; haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans")
-        ;; haskell-process-args-stack-ghci '("--ghc-options=-ferror-spans" "--with-ghc=ghci-ng")
-        ;; make flycheck only occur after a save only
-        ;; otherwise it is slowing things down too much
-        flycheck-idle-change-delay 4
-        ;; flycheck-check-syntax-automatically '(save mode-enabled)
-        erc-prompt-for-nickserv-password nil
-        powerline-default-separator 'alternate
-        helm-make-list-target-method 'qp
-        ;; backup-directory-alist
-        ;;       `((".*" . ,emacs-tmp-dir))
-        ;; auto-save-file-name-transforms
-        ;;       `((".*" ,emacs-tmp-dir t))
-        ;; auto-save-list-file-prefix emacs-tmp-dir
-        create-lockfiles nil
-        backup-directory-alist
-              `((".*" . ,temporary-file-directory))
-        auto-save-file-name-transforms
-              `((".*" ,temporary-file-directory t))
-        )
-  (setq-default TeX-PDF-mode t
+you should place your code here."
+  (setq
+   auto-save-interval 50
+   auto-save-timeout 3
+
+   erc-hide-list '("JOIN" "PART" "QUIT")
+   erc-prompt-for-nickserv-password nil
+
+   haskell-compile-cabal-build-command "stack build --nix --fast"
+
+   org-bullets-bullet-list '("■" "◆" "▲" "▶")
+   org-agenda-files (list "~/projects/cicd/org")
+
+   powerline-default-separator 'alternate
+
+   flycheck-idle-change-delay 4
+
+   undo-tree-auto-save-history t
+   undo-tree-history-directory-alist `((".*" . ,temporary-file-directory))
+
+   vc-follow-symlinks t
+
+   create-lockfiles nil
+   backup-directory-alist
+     `((".*" . ,temporary-file-directory))
+   auto-save-file-name-transforms
+     `((".*" ,temporary-file-directory t))
+
   )
 
-  (setq org-latex-minted-options
-     '(("frame" "lines") ("linenos=true")))
-  ;; always delete trailing space automatically on save
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-  (spacemacs/add-flycheck-hook 'sh-mode) 
-  ;; automatic file reloading if it changes externally
-  (global-auto-revert-mode t)
-  ;; Specific mappings
   (global-set-key [f5] 'browse-url-of-buffer)
-  (global-set-key (kbd "C-s") 'evil-write-all)
-  ;; (define-key evil-motion-state-map [C-i] 'evil-jump-forward)
-  (spacemacs/toggle-golden-ratio-on)
+  (global-auto-revert-mode t)
+
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (add-hook 'focus-out-hook 'save-buffer)
+  (add-hook 'nixos-mode-hook (lambda () (setq indent-tabs-mode nil )))
+  (add-hook 'haskell-mode-hook (lambda () (setq evil-auto-indent nil )))
+
   (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "t" 'ghc-show-type)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "i" 'ghc-show-info)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "gp" 'beginning-of-defun)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "gn" 'end-of-defun)
-  (add-hook 'nixos-mode-hook (lambda () (seq tab-width 2)))
-  ;; (spacemacs|use-package-add-hook nixos
-  ;;   :post-config (setq tab-width 2))
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "t" 'intero-type-at)
+  (spacemacs/toggle-golden-ratio-on)
 
-  (with-eval-after-load 'org
-    (add-to-list 'org-latex-packages-alist '("" "minted"))
-    (add-to-list 'org-latex-classes
-                 '("pi3r-org-paragraph"
-                   "\\documentclass{scrartcl}
-                   "
-                   ("\\section{%s}" . "\\section*{%s}")
-                   ("\\paragraph{%s}" . "\\paragraph*{%s}")))
-    (add-to-list 'org-latex-classes
-                 '("pi3r-org-sec" "\\documentclass{scrartcl}"
-                    ("\\section{%s}" . "\\section*{%s}")
-                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                    ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                    ;; ("\\subsubsection{%s}" . "\\subsubsec fedtion*{%s}")
-                    ;; ("\\subparagraph{%s}" . "\\subparagraph*{%s}")
-                    ))
-
-  )
+  ;; Faster scrolling with C-e/C-y
+  (setq-default evil-scroll-line-count 3)
 )
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(TeX-engine (quote xetex))
- '(evil-want-Y-yank-to-eol t)
- '(paradox-github-token t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
