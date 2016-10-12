@@ -1,5 +1,3 @@
 # DEVHOME
 
-kbd: [F11]
-
-
+kbd:[F11]
