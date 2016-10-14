@@ -1,0 +1,341 @@
+[[devbox]]
+# DEVBOX
+:experimental:
+
+[[table-of-contents]]
+## Table of Contents
+
+
+* link:#software-requirements[Software requirements]
+* link:#quick-first-time-setup[Quick first time setup]
+** link:#ssh-keys[ssh keys]
+** link:#box-import[box import]
+* link:#usage[Usage]
+** link:#vagrant[vagrant]
+** link:#operating-system[operating system]
+** link:#windows-manager[windows manager]
+*** link:#minimal-cheat-sheet[minimal cheat sheet]
+** link:#projects[projects]
+* link:#customization[Customization]
+** link:#system[system]
+** link:#user[user]
+*** link:#params[params]
+*** link:#dotfiles[dotfiles]
+*** link:#local-packages[local packages]
+*** link:#terminal-emulator[terminal emulator]
+* link:#how-is-the-box-generated-[How is the box generated ?]
+* link:#troubleshooting[Troubleshooting]
+* link:#life-cycle[Life cycle]
+
+[[software-requirements]]
+## Software requirements
+
+* Virtualbox 5.1.x
+* Vagrant 1.8.x
+
+
+[[quick-first-time-setup]]
+## Quick first time setup
+
+[[ssh-keys]]
+### ssh keys
+
+In the host, pick a folder of your choice (where the `Vagrantfile` will
+sit). In this folder:
+
+1.  create a directory `ssh-keys`.
+2.  copy your `Bitbucket` key pair, rename them 'cirb_rsa' and
+'cirb_rsa.pub' respectively if the filename differs.
+3.  copy your `Github` key pair, rename them 'cirb_github_rsa' and
+'cirb_github_rsa.pub'. If you use the same key pair, copy the previous
+pair and rename accordingly.
+4.  optionally copy the
+https://github.com/CIRB/devbox/blob/master/user/params.sh[params file]
+
+[[box-import]]
+### box import
+
+Open a terminal in the picked folder and type:
+
+....
+vagrant box add devbox http://repo.irisnet.be/boxes/devbox.box
+vagrant init devbox && vagrant up
+vagrant reload
+....
+
+[[usage]]
+== Usage
+
+[[vagrant]]
+### vagrant
+
+....
+# shutdown the vm
+vagrant halt
+# boot the vm
+vagrant up
+# update configuration
+vagrant provision
+....
+
+The provisioning is done automatically the first time `vagrant up` is
+executed. You can provision again later on by using `vagrant provision`.
+This is useful to check for a configuration update.
+
+Provisioning is separated into two steps: `system` to configure the
+system and `user` to configure the vagrant user. You can selectively ask
+for provisioning using:
+
+....
+vagrant provision --provision-with system
+vagrant provision --provision-with user
+....
+
+[[operating-system]]
+### operating system
+
+The devbox is based on https://nixos.org/[`NixOS`] version 16.09. NixOS
+is a Linux distribution based on the https://nixos.org/nix/[nix] package
+manager.
+
+The whole system setup is declared in
+https://github.com/CIRB/devbox/blob/master/system/configuration.nix.
+
+To clean-up the store (whenever the disk usage is too high) use:
+
+....
+→ sudo nix-collect-garbage -d
+....
+
+
+[[windows-manager]]
+### windows manager
+
+The devbox comes with a
+https://en.wikipedia.org/wiki/Tiling_window_manager[tiling windows
+manager] called http://xmonad.org/[xmonad]. Such a minimal approach has
+been chosen for 3 reasons:
+
+* Efficiency: the box needs to consume as minimum CPU/Mem resources as
+possible
+* Simplicity: the window manager is basic but yet quite flexible
+* Practicality: the desktop is distraction free.
+
+[[minimal-cheat-sheet]]
+#### minimal cheat sheet
+
+[cols=",",options="header",]
+|=====================================================================
+|Command |Description
+| kbd:[<Super> p] |Open Menu
+| kbd:[<Super> t] |New terminal
+| kbd:[<Super> 1..9] |Go to nth desktop
+| kbd:[<Super> <Shift> 1..9] |Switch to nth desktop
+| kbd:[<Super> Space] |Change between horizontal, vertical and stack layout
+| kbd:[<Super> Tab] |In stack layout, switch the stacked window
+| kbd:[<Super> <Shift> c] |Close (kill) current window
+| kbd:[<Super> m], kbd:[<Super> h] |Resize windows
+| kbd:[F 1] |Open this README in a browser
+|=====================================================================
+
+'''''
+
+[[projects]]
+projects
+^^^^^^^^
+
+The first time, the machine is provisioned a folder `~/projects/cicd` is
+created. This directory will be empty.
+
+You can easily enable your puppet and salt repository for your
+`hostgroup`. For the `bos` hostgroup, you would do:
+
+....
+.config/mr/config.d
+ln -s ../available.d/puppet-bos.mr .
+ln -s ../available.d/salt-bos.mr .
+mr -f up
+....
+
+'''''
+
+[[customization]]
+== Customization
+
+[[system]]
+### system
+
+You can add some specific configuration by editing
+`/etc/nixos/local-configuration.nix`.
+
+For instance if you want to install the `geany` package, just uncomment
+the adhoc line.
+
+After changing the `local-configuration.nix` file, rebuild `nixos` by
+using this command line:
+
+....
+→ sudo nixos-rebuild switch
+....
+
+`local-configuration.nix` is never overridden by a call for
+provisioning. To avoid losing your changes after a `vagrant destroy`,
+you might want to copy the file to '/vagrant'. In fact if
+`local-configuration.nix` exists on the host (where the `Vagrantfile`
+sits), it will be used the first time a box is provisioned.
+
+
+[[user]]
+### user
+
+[[params]]
+###= params
+
+You can tweak some default settings such as "do I want to install the
+geppetto plugin" by modifying the `user/params.sh` file. In order to do
+so, copy the
+https://github.com/CIRB/devbox/blob/master/user/params.sh[file] to the
+host where the `Vagrantfile` sits. You can easily do this by using this
+command line on the box:
+
+....
+→ cp /tmp/user/devbox-x.x.x/user/params.sh /vagrant/params.sh
+....
+
+'''''
+
+[[dotfiles]]
+#### dotfiles
+
+You can add any `dotfiles` repositories including your own personal ones
+thanks to https://github.com/RichiH/vcsh[vcsh/myrepos].
+
+For instance you might easily add/share some `vim`, `tmux` or `zsh`
+configurations.
+
+To share simple dotfiles configuration, for instance let say you want to
+share a default `.zshrc` file for the devbox, you can simply add the
+file to the https://github.com/CIRB/devbox-dotfiles[CIRB dotfiles
+repositry]. The file is now part of the default CIRB dotfiles source
+repository and will be pushed on the devbox at the next provisioning.
+
+If you want to share a non trivial, external or optional configuration,
+you can use or create a specific source repository for it and register
+the repository
+https://github.com/CIRB/vcsh_mr_template/tree/master/.config/mr/available.d[here].
+
+If you want the configuration to be active by default, you then add a
+link to it in the SCM, just like
+https://github.com/CIRB/vcsh_mr_template/blob/master/.config/mr/config.d/dotfiles.vcsh[this
+one]. On the other hand, if you want it inactive by default, you would
+ask the interested users to make the link themselves on their box.
+
+'''''
+
+Eventually there is a third option. Some of your configurations are
+personal and there is no need for them to be shared inside the CIRB
+organization. You normally won't need that option but it is there for
+flexibility sake. 3 steps are required:
+
+1.  Fork https://github.com/CIRB/vcsh_mr_template[mr CIRB template]
+2.  Change the
+https://github.com/CIRB/vcsh_mr_template/blob/master/.config/mr/available.d/mr.vcsh#L2[mr
+pointer] to it.
+3.  Change the `mr` pointer on your local box. As an example, you might
+follow this command line:
+
+....
+→ vcsh mr remote set-url origin git://github.com/PierreR/vcsh_mr_template.git
+....
+
+As a note, if you want to override the CIRB dotfiles completely you can
+replace
+https://github.com/PierreR/vcsh_mr_template/commit/82708255d904beffe53b9587e8f553aa8804cc37[the
+pointer to the dotfiles]. In order to keep such a setting after a
+`vagrant destroy`, you would copy the `user/params.sh` to `/vagrant` and
+change the `mr_template_repo_url` value.
+
+For more information about `vcsh`,
+https://github.com/RichiH/vcsh/blob/master/doc/README.md#from-zero-to-vcsh[Look
+here].
+
+'''''
+
+[[local-packages]]
+#### local packages
+
+If you need a package in 'user space' (and you are not interested in
+sharing such configuration), you might prefer the more imperative
+approach:
+
+....
+→ nix-env -i geany
+....
+
+You can quickly search for packages online at
+https://nixos.org/nixos/packages.html[nixos.org]
+
+[[terminal-emulator]]
+#### terminal emulator
+
+The `devbox` uses the `urxvt` terminal for its speed and customization.
+
+[cols=",",options="header",]
+|========================================================
+|Command |Description
+|kbd:[<Control> <Meta> p]|Change theme
+|kbd:[<Control> <Shift> up/down] |Increase/Decrease font size
+|kbd:[<Meta> <s>] |Search console output
+|========================================================
+
+'''''
+
+[[how-is-the-box-generated]]
+== How is the box generated ?
+
+The box is generated using packer and the source files from
+https://github.com/zimbatm/nixbox[here]:
+
+....
+packer.exe build nixos-x86_64.json
+vagrant box add devbox-x.x-pre packer_virtualbox-iso_virtualbox.box
+....
+
+The size of the 'pre box' is ~ 300M
+
+The box is then repackaged to a full vm:
+
+....
+git clone git@github.com:CIRB/devbox.git
+cd devbox
+vagrant up --no-provision
+vagrant provision --provision-with system
+vagrant reload
+rm -rf /tmp/system # on the future packaged box
+vagrant package --output devbox-x.x.x --vagrantfile Vagrantfile
+....
+
+The size of the repackaged vagrant box is ~ 2G.
+
+
+[[troubleshooting]]
+== Troubleshooting
+
+* With virtualbox `5.0.x`, for some host OS, Vagrant does not start its
+network interface. You will need to manually go "Machine ->
+Configuration -> Network" and ensure the box "Cable Connected" is
+checked.
+
+[[life-cycle]]
+== Life cycle
+
+Tickets and issues are handled in
+http://jira.cirb.lan/browse/CICDPROJ-150[Jira]
+
+The versioning scheme used is semantic: `major.minor.patch`. Please look
+at the
+https://github.com/CIRB/devbox/blob/master/CHANGELOG.md[Changelog] for
+more information.
+
+The devbox will be maintained continously with at least a major release
+every six months to follow the OS lifecycle ('__.03' and '__.09').
