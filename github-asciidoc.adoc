@@ -1,0 +1,94 @@
+= Github supported Asciidoc
+:page-layout: docs
+:toc: left
+:toclevels: 2
+:numbered:
+:sectnumlevels: 1
+:nofooter:
+:icons: font
+:source-language: bash
+:source-highlighter: pygments
+:experimental:
+ifdef::env-github[]
+:toc-placement: preamble
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::env-github[]
+
+toc::[]
+
+== Title 1
+
+> Quoting
+
+A https://github.com/CIRB/devbox/blob/master/user/params.sh[link]
+
+* Virtualbox 5.1.x
+* Vagrant 1.8.x
+
+
+kbd:[c-s]
+
+menu:File[Save]
+
+- [ ] to do
+- [x] done
+
+.Table
+:===
+symbol : description
+
+^. : view
+.~ : set
+:===
+
+[WARNING]
+
+====
+icon:info-circle[1x] is not supported in Github (because `font` icons is not enabled for security reason)
+====
+
+
+NOTE: Some info
+
+TIP: One tip
+
+
+== Title 2
+
+### title 21
+
+In the hostfootnote:[footnotes], pick a folder of your choice. In this folder:
+
+.  create a directory
+.  copy yo
+.  optionally copy the
+
+### title 22
+
+.source.hs
+```haskell
+-- comment
+main :: IO ()
+main = do
+  putStrLn "Hello"
+  putStrLn "World" <1>
+```
+<1> what is it ?
+
+#### title 23
+
+Open a terminal in the picked folder and type:
+
+[source,ruby]
+.app.rb
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+----
