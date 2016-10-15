@@ -1,4 +1,6 @@
+include::include_var.adoc[]
 = Github supported Asciidoc
+{latest_version}
 :page-layout: docs
 :toc: left
 :toclevels: 2
