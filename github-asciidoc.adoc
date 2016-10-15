@@ -1,6 +1,4 @@
-include::include_var.adoc[]
 = Github supported Asciidoc
-{latest_version}
 :page-layout: docs
 :toc: left
 :toclevels: 2
@@ -23,6 +21,12 @@ endif::env-github[]
 toc::[]
 
 == Title 1
+
+Include var are not supported by github:
+
+include::include_var.adoc[]
+
+{latest_version}
 
 > Quoting
 
